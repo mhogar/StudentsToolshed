@@ -1,0 +1,2 @@
+class TaskTrackerTask < ApplicationRecord
+end

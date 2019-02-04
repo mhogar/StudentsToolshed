@@ -1,4 +1,4 @@
-import appComponent from '../src/app.vue'
+import appComponent from '../src/task_tracker/app.vue'
 
 document.addEventListener("DOMContentLoaded", () => {
 
