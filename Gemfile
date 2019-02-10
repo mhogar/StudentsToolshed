@@ -23,6 +23,9 @@ gem 'webpacker', '~> 3.5'
 gem 'semantic-ui-sass'
 gem 'jquery-rails'
 
+#authentication
+gem 'devise'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production

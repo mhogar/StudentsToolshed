@@ -17,9 +17,10 @@
       <div class="item">
         <div class="ui huge inverted center aligned header">Select an App</div>
       </div>
-      <a class="item" href="<%= url_for(action: 'index', controller: 'task_tracker') %>">
+      <!--url_for(action: 'index', controller: 'task_tracker')-->
+      <a class="item">
         <div class="ui medium inverted header">
-          <i class="icon tasks purple"></i>
+          <i class="icon tasks yellow"></i>
           <div class="content">Task Tracker</div>
         </div>
       </a>
@@ -28,17 +29,31 @@
       </div>
     </div>
     <div class="pusher">
-      <div class="ui large purple inverted secondary menu">
+      <div class="ui large grey inverted secondary menu">
         <div class="item">
           <button id="menu-button" class="ui basic inverted icon button">
             <i class="sidebar icon"></i>
           </button>
         </div>
+        <!--url_for(action: 'home', controller: 'welcome')-->
         <div class="item">
-          <a id="menu-logo" class="ui large inverted header" href="<%= url_for(action: 'home', controller: 'welcome') %>">FRACTAL</a>
+          <a id="menu-logo" class="ui large inverted header">FRACTAL</a>
+        </div>
+        <div class="item right">
+          <% if not user_signed_in? %>
+            <%= link_to "Login", new_user_session_path, class: 'ui basic blue inverted button menu-button' %>
+            <%= link_to "Sign up", new_user_registration_path, class: 'ui green button menu-button' %>
+          <% else %>
+            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: 'ui red basic inverted button menu-button'  %>
+          <% end %>
         </div>
       </div>
       <div class="ui container">
+        <% flash.each do |key, value|%>
+          <div class="<%= flash_class(key) %>">
+            <i class = "close icon"></i><%= value %>
+          </div>
+        <% end %>
         <div id="app-viewport">
           <%= yield %>
         </div>

@@ -20,5 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
 	$('#menu-button').click(function() {
 		$('#app-selector').sidebar('toggle');
 	});
+
+	$('.message .close').on('click', function() {
+    	$(this).closest('.message').transition('fade');
+  	});
 });
 
