@@ -21,9 +21,6 @@ environment.loaders.append('css', {
 environment.plugins.prepend(
 	'Provide', 
 	new webpack.ProvidePlugin({
-		$: 'jquery',
-		jQuery: 'jquery',
-		jquery: 'jquery',
 		Vue: 'vue'
 	})
 );

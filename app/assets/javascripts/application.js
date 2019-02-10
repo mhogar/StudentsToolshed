@@ -13,3 +13,12 @@
 //= require rails-ujs
 //= require activestorage
 //= require_tree .
+//= require jquery
+//= require semantic-ui
+
+document.addEventListener("DOMContentLoaded", () => {
+	$('#menu-button').click(function() {
+		$('#app-selector').sidebar('toggle');
+	});
+});
+

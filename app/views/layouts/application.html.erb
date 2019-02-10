@@ -2,8 +2,6 @@
 <html>
   <head>
     <title>Fractal</title>
-    
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -15,17 +13,35 @@
   </head>
 
   <body>
-    <div class="pushable">
-      <div id="app-selector" class="ui sidebar inverted vertical menu">
-        <a class="ui logo item" href="<%= url_for(action: 'home', controller: 'welcome') %>">
-          <i class="purple tasks icon"></i>Fractal
-        <a class="ui logo item" href="<%= url_for(action: 'index', controller: 'task_tracker') %>">
-          <i class="purple tasks icon"></i>Task Tracker
-        </a>
-        <a class="item">More apps comming soon</a>
+    <div id="app-selector" class="ui sidebar inverted large vertical menu">
+      <div class="item">
+        <div class="ui huge inverted center aligned header">Select an App</div>
       </div>
-      <div class="ui container pusher">
-        <%= yield %>
+      <a class="item" href="<%= url_for(action: 'index', controller: 'task_tracker') %>">
+        <div class="ui medium inverted header">
+          <i class="icon tasks purple"></i>
+          <div class="content">Task Tracker</div>
+        </div>
+      </a>
+      <div class="item">
+        <div class="ui tiny inverted sub header">More apps comming soon</div>
+      </div>
+    </div>
+    <div class="pusher">
+      <div class="ui large purple inverted secondary menu">
+        <div class="item">
+          <button id="menu-button" class="ui basic inverted icon button">
+            <i class="sidebar icon"></i>
+          </button>
+        </div>
+        <div class="item">
+          <a id="menu-logo" class="ui large inverted header" href="<%= url_for(action: 'home', controller: 'welcome') %>">FRACTAL</a>
+        </div>
+      </div>
+      <div class="ui container">
+        <div id="app-viewport">
+          <%= yield %>
+        </div>
       </div>
     </div>
   </body>

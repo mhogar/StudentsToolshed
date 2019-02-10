@@ -21,6 +21,7 @@ gem 'webpacker', '~> 3.5'
 
 #semantic ui
 gem 'semantic-ui-sass'
+gem 'jquery-rails'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
