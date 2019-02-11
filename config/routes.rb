@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :task_tracker
   root 'welcome#home'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  
+  get 'task_tracker', to: 'task_tracker#index'
+  namespace :task_tracker do
+  	resources :tasks, :stories, :projects
+  end
 end
