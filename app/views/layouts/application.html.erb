@@ -17,8 +17,7 @@
       <div class="item">
         <div class="ui huge inverted center aligned header">Select an App</div>
       </div>
-      <!--url_for(action: 'index', controller: 'task_tracker')-->
-      <a class="item">
+      <a class="item" href="<%= task_tracker_index_path %>">
         <div class="ui medium inverted header">
           <i class="icon tasks yellow"></i>
           <div class="content">Task Tracker</div>
@@ -35,16 +34,19 @@
             <i class="sidebar icon"></i>
           </button>
         </div>
-        <!--url_for(action: 'home', controller: 'welcome')-->
         <div class="item">
-          <a id="menu-logo" class="ui large inverted header">FRACTAL</a>
+          <%= link_to "FRACTAL", root_path, id: "menu-logo", class: "ui large inverted header" %>
         </div>
         <div class="item right">
           <% if not user_signed_in? %>
-            <%= link_to "Login", new_user_session_path, class: 'ui basic blue inverted button menu-button' %>
-            <%= link_to "Sign up", new_user_registration_path, class: 'ui green button menu-button' %>
+            <%= link_to "Login", new_user_session_path, class: 'ui basic inverted button right-menu-item' %>
+            <%= link_to "Sign up", new_user_registration_path, class: 'ui blue button right-menu-item' %>
           <% else %>
-            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: 'ui red basic inverted button menu-button'  %>
+            <div class="right-menu-item">
+              <i class="user icon"></i>
+              <strong><%= current_user.email %></strong>
+            </div>
+            <%= link_to "Logout", destroy_user_session_path, method: :delete, class: 'ui red basic inverted button right-menu-item'  %>
           <% end %>
         </div>
       </div>
@@ -54,6 +56,7 @@
             <i class = "close icon"></i><%= value %>
           </div>
         <% end %>
+        <br />
         <div id="app-viewport">
           <%= yield %>
         </div>
