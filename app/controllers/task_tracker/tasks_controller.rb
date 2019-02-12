@@ -2,13 +2,7 @@ class TaskTracker::TasksController < ApplicationController
 	skip_before_action :verify_authenticity_token
 	before_action :set_task, only: [:show, :update, :destroy]
 
-	# GET /tasks
-	# GET /tasks.json
-	def index
-		@tasks = TaskTrackerTask.all
-	end
-
-	#GET /tasks/1
+	# GET /tasks/1
   # GET /tasks/1.json
   def show
   end
