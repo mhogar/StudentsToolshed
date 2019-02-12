@@ -1,5 +1,6 @@
 class TaskTracker::TasksController < ApplicationController
 	skip_before_action :verify_authenticity_token
+	before_action :set_task, only: [:show, :update, :destroy]
 
 	# GET /tasks
 	# GET /tasks.json

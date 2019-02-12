@@ -1,1 +1,1 @@
-json.array! @tasks, partial: 'tasks/task', as: :task
+json.array! @tasks, partial: 'task_tracker/tasks/task', as: :task

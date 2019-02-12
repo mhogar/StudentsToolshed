@@ -10,13 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_10_214052) do
+ActiveRecord::Schema.define(version: 2019_02_12_015142) do
+
+  create_table "task_tracker_projects", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_task_tracker_projects_on_user_id"
+  end
+
+  create_table "task_tracker_stories", force: :cascade do |t|
+    t.integer "task_tracker_project_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["task_tracker_project_id"], name: "index_task_tracker_stories_on_task_tracker_project_id"
+  end
 
   create_table "task_tracker_tasks", force: :cascade do |t|
+    t.integer "task_tracker_story_id"
     t.string "name"
     t.boolean "completed", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["task_tracker_story_id"], name: "index_task_tracker_tasks_on_task_tracker_story_id"
   end
 
   create_table "users", force: :cascade do |t|
