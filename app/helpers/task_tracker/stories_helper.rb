@@ -1,0 +1,2 @@
+module TaskTracker::StoriesHelper
+end

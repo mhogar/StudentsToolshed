@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class TaskTrackerTaskTest < ActiveSupport::TestCase
+class TaskTracker::TaskTest < ActiveSupport::TestCase
 	setup do
-		@task = TaskTrackerTask.new(story_id: 1, name: "A task name")
+		@task = TaskTracker::Task.new(story_id: 1, name: "A task name")
 	end
 
 	test "task is valid" do
@@ -21,21 +21,21 @@ class TaskTrackerTaskTest < ActiveSupport::TestCase
 
 	test "task with name too short is invalid" do
 		#min length is valid
-		@task.name = "a" * (TaskTrackerTask::NAME_MIN_LENGTH)
+		@task.name = "a" * (TaskTracker::Task::NAME_MIN_LENGTH)
 		assert @task.valid?
 
 		#one less than min is not valid
-		@task.name = "a" * (TaskTrackerTask::NAME_MIN_LENGTH - 1)
+		@task.name = "a" * (TaskTracker::Task::NAME_MIN_LENGTH - 1)
 		assert_not @task.valid?
 	end
 
 	test "task with name too long is invalid" do
 		#max length is valid
-		@task.name = "a" * (TaskTrackerTask::NAME_MAX_LENGTH )
+		@task.name = "a" * (TaskTracker::Task::NAME_MAX_LENGTH )
 		assert @task.valid?
 
 		#one more than max in not valid
-		@task.name = "a" * (TaskTrackerTask::NAME_MAX_LENGTH + 1)
+		@task.name = "a" * (TaskTracker::Task::NAME_MAX_LENGTH + 1)
 		assert_not @task.valid?
 	end
 end

@@ -1,7 +1,9 @@
 one: 
   id: 1
+  project_id: 1
   name: "New Story"
 
 two: 
   id: 2
+  project_id: 1
   name: "Another Story"

@@ -1,0 +1,11 @@
+one: 
+  id: 1
+  user_id: 1
+  name: A new project
+  description: the project's description
+
+two: 
+  id: 2
+  user_id: 1
+  name: Another project
+  description: the other project's description

@@ -5,7 +5,9 @@
 # below each fixture, per the syntax in the comments below
 #
 one: 
+  id: 1
   email: alice@example.com
 
 two:
+  id: 2
   email: bob@example.com

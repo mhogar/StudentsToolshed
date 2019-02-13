@@ -3,11 +3,11 @@ require 'test_helper'
 class TaskTracker::TasksControllerTest < ActionDispatch::IntegrationTest
 	setup do
     @task = task_tracker_tasks(:one)
-    @new_task = TaskTrackerTask.new(story_id: 1, name: "A new task", completed: true)
+    @new_task = TaskTracker::Task.new(story_id: 1, name: "A new task", completed: true)
   end
 
   test "test create task" do
-    assert_difference('TaskTrackerTask.count', 1) do
+    assert_difference('TaskTracker::Task.count', 1) do
       post "/task_tracker/tasks/", params: { task: @new_task }, as: :json
     end
 
@@ -21,7 +21,7 @@ class TaskTracker::TasksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "test update task" do
-  	assert_difference('TaskTrackerTask.count', 0) do
+  	assert_difference('TaskTracker::Task.count', 0) do
     	put "/task_tracker/tasks/#{@task.id}", params: { task: @new_task }, as: :json
     end
 
@@ -30,7 +30,7 @@ class TaskTracker::TasksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "test destroy task" do
-    assert_difference('TaskTrackerTask.count', -1) do
+    assert_difference('TaskTracker::Task.count', -1) do
       delete "/task_tracker/tasks/#{@task.id}", as: :json
     end
 

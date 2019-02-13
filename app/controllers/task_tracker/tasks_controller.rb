@@ -10,7 +10,7 @@ class TaskTracker::TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    @task = TaskTrackerTask.new(task_params)
+    @task = TaskTracker::Task.new(task_params)
 
     if @task.save
       render :show, status: :created, location: @task
@@ -38,7 +38,7 @@ class TaskTracker::TasksController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task
-      @task = TaskTrackerTask.find(params[:id])
+      @task = TaskTracker::Task.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
