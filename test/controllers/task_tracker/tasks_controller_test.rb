@@ -39,6 +39,6 @@ class TaskTracker::TasksControllerTest < ActionDispatch::IntegrationTest
 
   private
   	def test_model_fields(src_model, test_model)
-  		['name', 'completed'].each { |field| assert_equal(src_model[field], test_model[field]) }
+  		['story_id', 'name', 'completed'].each { |field| assert_equal(src_model[field], test_model[field]) }
   	end
 end

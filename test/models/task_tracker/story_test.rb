@@ -2,7 +2,7 @@ require 'test_helper'
 
 class TaskTrackerStoryTest < ActiveSupport::TestCase
   setup do
-		@story = TaskTracker::Story.new(project_id: 1, name: "A story name")
+		@story = task_tracker_stories(:one)
 	end
 
 	test "story is valid" do
