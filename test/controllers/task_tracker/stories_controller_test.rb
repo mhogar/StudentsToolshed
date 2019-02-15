@@ -6,6 +6,24 @@ class TaskTracker::StoriesControllerTest < ActionDispatch::IntegrationTest
     @new_story = TaskTracker::Story.new(project_id: 1, name: "A new story")
   end
 
+  test "show story" do
+    get "/task_tracker/stories/#{@story.id}", as: :json
+
+    assert_response :success
+    test_model_fields(@story, JSON.parse(@response.body))
+  end
+
+  test "get by project_id" do
+    get "/task_tracker/stories/?project_id=1", as: :json
+
+    assert_response :success
+    response = JSON.parse(@response.body)
+
+    assert_equal(response.count, 2)
+    test_model_fields(task_tracker_stories(:one), response[0])
+    test_model_fields(task_tracker_stories(:two), response[1])
+  end
+
   test "create story" do
     assert_difference('TaskTracker::Story.count', 1) do
       post "/task_tracker/stories/", params: { story: @new_story }, as: :json
@@ -13,11 +31,6 @@ class TaskTracker::StoriesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response 201
     test_model_fields(@new_story, JSON.parse(@response.body))
-  end
-
-  test "show story" do
-    get "/task_tracker/stories/#{@story.id}", as: :json
-    assert_response :success
   end
 
   test "update story" do
