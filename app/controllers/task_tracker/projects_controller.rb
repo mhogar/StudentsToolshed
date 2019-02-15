@@ -2,6 +2,35 @@ class TaskTracker::ProjectsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_project, only: [:show, :update, :destroy]
 
+  def stats
+    @project_stats = []
+
+    TaskTracker::Project.all.each do |project|
+      stats = {}
+      stats[:id] = project.id
+      stats[:name] = project.name
+      stats[:description] = project.description
+
+      stories = project.stories
+      stats[:numStories] = stories.count
+
+      stats[:numTasks] = 0
+      stats[:percent] = 0
+
+      stories.each do |story| 
+        tasks = story.tasks
+        stats[:numTasks] += tasks.count
+        stats[:percent] += tasks.select { |task| task.completed == true }.count
+      end
+
+      if stats[:percent] > 0
+        stats[:percent] = (stats[:percent].to_f / stats[:numTasks]).round(2) * 100
+      end
+
+      @project_stats.append(stats)
+    end
+  end
+
   # GET /task_tracker/projects/1
   # GET /task_tracker/projects/1.json
   def show

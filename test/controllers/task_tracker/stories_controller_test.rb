@@ -10,7 +10,10 @@ class TaskTracker::StoriesControllerTest < ActionDispatch::IntegrationTest
     get "/task_tracker/stories/#{@story.id}", as: :json
 
     assert_response :success
-    test_model_fields(@story, JSON.parse(@response.body))
+    response = JSON.parse(@response.body)
+
+    test_model_fields(@story, response)
+    assert_equal(response['tasks'].count, 2)
   end
 
   test "get by project_id" do
