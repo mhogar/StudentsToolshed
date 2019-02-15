@@ -2,6 +2,10 @@ class TaskTracker::TasksController < ApplicationController
 	skip_before_action :verify_authenticity_token
 	before_action :set_task, only: [:show, :update, :destroy]
 
+  def index
+    @tasks = TaskTracker::Task.where(story_id: params.require(:story_id))
+  end
+
 	# GET /tasks/1
   # GET /tasks/1.json
   def show

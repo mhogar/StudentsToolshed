@@ -1,0 +1,22 @@
+<div class="ui large black inverted secondary menu">
+  <div class="item">
+    <button id="menu-button" class="ui basic inverted icon button">
+      <i class="sidebar icon"></i>
+    </button>
+  </div>
+  <div class="item">
+    <%= link_to "FRACTAL", root_path, id: "menu-logo", class: "ui large inverted header" %>
+  </div>
+  <div class="item right">
+    <% if not user_signed_in? %>
+      <%= link_to "Login", new_user_session_path, class: 'ui basic inverted button right-menu-item' %>
+      <%= link_to "Sign up", new_user_registration_path, class: 'ui blue button right-menu-item' %>
+    <% else %>
+      <div class="right-menu-item">
+        <i class="user icon"></i>
+        <strong><%= current_user.email %></strong>
+      </div>
+      <%= link_to "Logout", destroy_user_session_path, method: :delete, class: 'ui red basic inverted button right-menu-item'  %>
+    <% end %>
+  </div>
+</div>
