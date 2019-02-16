@@ -127,7 +127,7 @@
 					function(data) {
 						let newStory = data;
 						this.story.id = newStory.id;
-					},
+					}.bind(this),
 					function(error) {
 						console.log(error);
 					}
@@ -138,7 +138,7 @@
 					this.story.id,
 					function(response) {
 						this.$parent.deleteFromStories(this.story.id);
-					},
+					}.bind(this),
 					function(error) {
 						console.log(error);
 					}

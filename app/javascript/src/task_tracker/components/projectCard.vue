@@ -45,6 +45,8 @@
 			$('#' + this.progressBarId).progress({
 				percent: this.project.percent
 			});
+
+			//console.log(this.project);
 		}
 	};
 </script>

@@ -1,46 +1,53 @@
 <template>
 	<div>
-		<div class="ui grid">
-			<div class="twelve wide column">
-				<h2 class="ui header" v-if="state === ''">
-				  	<i class="folder open icon"></i>
-				  	<div class="content">
-				    	{{project.name}}
-				    	<div class="sub header">{{project.description}}</div>
-				  	</div>
-				</h2>
-				<form class="ui form" v-on:submit.prevent="update($event)" v-else>
-					<div class="fields">
-						<div class="four wide field">
-							<label>Name</label>
-							<input id="project-name-input" type="text" name="name" required="true" placeholder="Name (required)" v-model="editProject.name" />
-						</div>
-						<div class="ten wide field">
-							<label>Description</label>
-							<input id="project-description-input" type="text" name="description" placeholder="Add a description" v-model="editProject.description" />
-						</div>
-					</div>
-					<button class="ui button blue" type="submit">Save</button>
-					<button class="ui button" v-on:click="state = ''">Discard</button>
-			  	</form>
-			</div>
-			<div class="right floated three wide column">
-				<button class="ui labeled icon purple button" v-on:click="createStory($event)">
-				  <i class="plus icon"></i>
-				  Add a new story
-				</button>
-			</div>
-			<div class="one wide column">
-				<EditMenu v-bind:editFunc="edit" v-bind:deleteFunc="destroy" v-bind:confirmDelete="deleteConfirmLevel" v-bind:confirmDeleteMessage="deleteConfirmMessage"></EditMenu>
+		<div v-if="loading" class="ui basic segment">
+			<div class="ui active inverted dimmer">
+				<div class="ui text loader">Loading</div>
 			</div>
 		</div>
-		<h2 class="ui center aligned header" id="no-stories-message" v-if="!project.stories.length">
-		  <span class="sub header">You don't have any stories yet. Create some.</span>
-		</h2>
-		<Story v-for="story in project.stories" :key="story.id" v-bind:story="story"></Story>
-		<button class="ui labeled icon teal button" id="back-button" v-on:click="goBackToProjectSelect()">
-			<i class="ui icon arrow left"></i> Back
-		</button>
+		<div v-else>
+			<div class="ui grid">
+				<div class="twelve wide column">
+					<h2 class="ui header" v-if="state === ''">
+					  	<i class="folder open icon"></i>
+					  	<div class="content">
+					    	{{project.name}}
+					    	<div class="sub header">{{project.description}}</div>
+					  	</div>
+					</h2>
+					<form class="ui form" v-on:submit.prevent="update($event)" v-else>
+						<div class="fields">
+							<div class="four wide field">
+								<label>Name</label>
+								<input id="project-name-input" type="text" name="name" required="true" placeholder="Name (required)" v-model="editProject.name" />
+							</div>
+							<div class="ten wide field">
+								<label>Description</label>
+								<input id="project-description-input" type="text" name="description" placeholder="Add a description" v-model="editProject.description" />
+							</div>
+						</div>
+						<button class="ui button blue" type="submit">Save</button>
+						<button class="ui button" v-on:click="state = ''">Discard</button>
+				  	</form>
+				</div>
+				<div class="right floated three wide column">
+					<button class="ui labeled icon purple button" v-on:click="createStory($event)">
+					  <i class="plus icon"></i>
+					  Add a new story
+					</button>
+				</div>
+				<div class="one wide column">
+					<EditMenu v-bind:editFunc="edit" v-bind:deleteFunc="destroy" v-bind:confirmDelete="deleteConfirmLevel" v-bind:confirmDeleteMessage="deleteConfirmMessage"></EditMenu>
+				</div>
+			</div>
+			<h2 class="ui center aligned header" id="no-stories-message" v-if="!project.stories.length">
+			  <span class="sub header">You don't have any stories yet. Create some.</span>
+			</h2>
+			<Story v-for="story in project.stories" :key="story.id" v-bind:story="story"></Story>
+			<button class="ui labeled icon teal button" id="back-button" v-on:click="goBackToProjectSelect()">
+				<i class="ui icon arrow left"></i> Back
+			</button>
+		</div>
 	</div>
 </template>
 
@@ -72,6 +79,7 @@
 		},
 		data: function() {
 			return {
+				loading: true,
 				state: '',
 				project: {},
 				editProject: {}
@@ -97,9 +105,11 @@
 		},
 		methods: {
 			loadProject: function() {
+				this.loading = true;
 				Api.getProjectById(this.projectId, function(data) {
 					this.project = data;
-				},
+					this.loading = false;
+				}.bind(this),
 				function(error) {
 					console.log(error);
 				});

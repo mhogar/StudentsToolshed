@@ -34,6 +34,7 @@ class TaskTracker::ProjectsController < ApplicationController
   # GET /task_tracker/projects/1
   # GET /task_tracker/projects/1.json
   def show
+    #TODO: get entire hierarchy (create new association between projects and stories)
   end
 
   # POST /task_tracker/projects

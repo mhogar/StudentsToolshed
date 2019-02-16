@@ -92,7 +92,7 @@
 					function(data) {
 						let newTask = data;
 						this.task.id = newTask.id;
-					},
+					}.bind(this),
 					function(error) {
 						console.log(error);
 					}
@@ -103,7 +103,7 @@
 					this.task.id,
 					function(response) {
 						this.$parent.deleteFromTasks(this.task.id);
-					},
+					}.bind(this),
 					function(error) {
 						console.log(error);
 					}
