@@ -122,12 +122,27 @@
 
 				this.story.name = this.editStory.name;
 
-				let newStory = Api.createOrUpdateStory(this.story);
-				this.story.id = newStory.id;
+				Api.createOrUpdateStory(
+					this.story,
+					function(data) {
+						let newStory = data;
+						this.story.id = newStory.id;
+					},
+					function(error) {
+						console.log(error);
+					}
+				);
 			},
 			destroy: function(event) {
-				this.$parent.deleteFromStories(this.story.id);
-				Api.deleteStory(this.story.id);
+				Api.deleteStory(
+					this.story.id,
+					function(response) {
+						this.$parent.deleteFromStories(this.story.id);
+					},
+					function(error) {
+						console.log(error);
+					}
+				);
 			},
 			createTask: function(event) {
 				let task = {

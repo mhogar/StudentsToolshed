@@ -97,7 +97,12 @@
 		},
 		methods: {
 			loadProject: function() {
-				return Api.getProjectById(this.projectId);
+				Api.getProjectById(this.projectId, function(data) {
+					this.project = data;
+				},
+				function(error) {
+					console.log(error);
+				});
 			},
 			createStory: function(event) {
 				let story = {
@@ -135,7 +140,13 @@
 				this.project.name = this.editProject.name;
 				this.project.description = this.editProject.description;
 
-				Api.updateProject(this.project);
+				Api.updateProject(
+					this.project,
+					function(data) {},
+					function(error) {
+						console.log(error);
+					}
+				);
 			},
 			destroy: function(event) {
 				this.$parent.deleteFromProjects(this.project.id);
@@ -144,7 +155,7 @@
 			}
 		},
 		beforeMount: function() {
-			this.project = this.loadProject();
+			this.loadProject();
 		}
 	};
 </script>

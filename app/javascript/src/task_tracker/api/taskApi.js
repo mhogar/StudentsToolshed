@@ -1,7 +1,20 @@
-import apiHelper for 'api_helper'
+import axios from 'axios'
+
+function createPromise(promise, successFunction, errorFunction) {
+	return promise.then(function (response) {
+		let srcData = response.data;
+		let data = {
+			storyId: srcData.story_id,
+			name: srcData.name,
+			completed: srcData.completed
+		}
+
+		successFunction(data);
+	}).catch(errorFunction);
+}
 
 export function getTasksByStoryId(storyId, successFunction, errorFunction) {
-	return apiHelper.createPromise(axios.get(`/task_tracker/tasks/?story_id=${storyId}`), successFunction, errorFunction);
+	return createPromise(axios.get(`/task_tracker/tasks/?story_id=${storyId}`), successFunction, errorFunction);
 }
 
 export function createOrUpdateTask(task, successFunction, errorFunction) {
@@ -14,13 +27,13 @@ export function createOrUpdateTask(task, successFunction, errorFunction) {
 	
 	//create
 	if (taskId === -1) {
-		return apiHelper.createPromise(axios.post('/task_tracker/tasks.json', localTask), successFunction, errorFunction);
+		return createPromise(axios.post('/task_tracker/tasks.json', localTask), successFunction, errorFunction);
 	}
 
 	//update
-	return apiHelper.createPromise(axios.put(`/task_tracker/tasks/${taskId}.json`, localTask), successFunction, errorFunction);
+	return createPromise(axios.put(`/task_tracker/tasks/${taskId}.json`, localTask), successFunction, errorFunction);
 }
 
 export function deleteTask(taskId, successFunction, errorFunction) {
-	return apiHelper.createPromise(axios.delete(`/task_tracker/tasks/${taskId}.json`), successFunction, errorFunction);
+	return createPromise(axios.delete(`/task_tracker/tasks/${taskId}.json`), successFunction, errorFunction);
 }

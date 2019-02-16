@@ -36,36 +36,54 @@
 
 				this.loadProjects();
 			},
-			loadProjects: function() {
-				this.projects = Api.getProjectStats();
+			loadProjects: function(callback = null) {
+				Api.getProjectStats(function(data) {
+					this.projects = data;
+
+					if (callback !== null) {
+						callback();
+					}
+				},
+				function(error) {
+					console.log(error);
+				});
 			},
 			selectProject: function(project) {
 				this.selectedProject = project;
 				window.scrollTo(0, 0);
 			},
 			createProject: function(event) {
-				let project = Api.createProject(
+				Api.createProject(
 					{
+						userId: 1,
 						name: 'New Project',
-						description: '',
-						numStories: 0,
-						numTasks: 0,
-						percent: 0
+						description: ''
+					},
+					function(data) {
+						this.loadProjects(function() {
+							let index = this.projects.findIndex(item => item.id === project.id);
+							if (index !== -1) {
+								this.projects[index].isNew = true;
+							}
+						});
+					},
+					function(error) {
+						console.log(error);
 					}
 				);
-
-				this.loadProjects();
-
-				let index = this.projects.findIndex(item => item.id === project.id);
-				if (index !== -1) {
-					this.projects[index].isNew = true;
-				}
 			},
 			deleteFromProjects: function(projectId) {
 				let index = this.projects.findIndex(item => item.id === projectId);
 				if (index !== -1) {
-					this.$delete(this.projects, index);
-					Api.deleteProject(projectId);
+					Api.deleteProject(
+						projectId,
+						function(response) {
+							this.$delete(this.projects, index);
+						},
+						function(error) {
+							console.log(error);
+						}
+					);
 				}
 			}
 		},

@@ -61,7 +61,13 @@
 				this.$parent.updateProgressBar();
 
 				if (this.state !== 'create') {
-					Api.createOrUpdateTask(this.task);
+					Api.createOrUpdateTask(
+						this.task,
+						function(data) {},
+						function(error) {
+							console.log(error);
+						}
+					);
 				}
 			},
 			edit: function(event) {
@@ -81,12 +87,27 @@
 
 				this.task.name = this.editTask.name;
 
-				let newTask = Api.createOrUpdateTask(this.task);
-				this.task.id = newTask.id;
+				Api.createOrUpdateTask(
+					this.task,
+					function(data) {
+						let newTask = data;
+						this.task.id = newTask.id;
+					},
+					function(error) {
+						console.log(error);
+					}
+				);
 			},
 			destroy: function(event) {
-				this.$parent.deleteFromTasks(this.task.id);
-				Api.deleteTask(this.task.id);
+				Api.deleteTask(
+					this.task.id,
+					function(response) {
+						this.$parent.deleteFromTasks(this.task.id);
+					},
+					function(error) {
+						console.log(error);
+					}
+				);
 			}
 		}
 	};
