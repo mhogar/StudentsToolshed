@@ -10,18 +10,11 @@ class TaskTracker::ProjectsController < ApplicationController
       stats[:id] = project.id
       stats[:name] = project.name
       stats[:description] = project.description
+      stats[:num_stories] = project.stories.count
 
-      stories = project.stories
-      stats[:num_stories] = stories.count
-
-      stats[:num_tasks] = 0
-      stats[:percent] = 0
-
-      stories.each do |story| 
-        tasks = story.tasks
-        stats[:num_tasks] += tasks.count
-        stats[:percent] += tasks.select { |task| task.completed == true }.count
-      end
+      tasks = project.tasks
+      stats[:num_tasks] = tasks.count
+      stats[:percent] = tasks.select { |task| task.completed == true }.count
 
       if stats[:percent] > 0
         stats[:percent] = (stats[:percent].to_f / stats[:num_tasks]).round(2) * 100

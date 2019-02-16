@@ -88,13 +88,11 @@
 			deleteFromProjects: function(projectId) {
 				let index = this.projects.findIndex(item => item.id === projectId);
 				if (index !== -1) {
-					this.loading = true;
 					Api.deleteProject(
 						projectId,
 						function(response) {
 							this.$delete(this.projects, index);
-							this.loading = false;
-						},
+						}.bind(this),
 						function(error) {
 							console.log(error);
 						}

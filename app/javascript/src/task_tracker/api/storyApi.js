@@ -1,17 +1,23 @@
 import axios from 'axios'
+import { convertTaskData } from './taskApi';
 
-function sanitizeData(data) {
-	return {
+export function convertStoryData(data) {
+	let newData = {
+		id: data.id,
 		projectId: data.project_id,
-		name: data.name,
-		tasks: data.tasks
+		name: data.name
 	};
+
+	newData.tasks = [];
+	data.tasks.forEach((task) => newData.tasks.push(convertTaskData(task)));
+
+	return newData;
 }
 
 export function getStoriesByProjectId(projectId, successFunction, errorFunction) {
 	return axios.get(`/task_tracker/stories/?project_id=${projectId}`)
 		.then(function(response) {
-			response.data.forEach((item, index, array) => array[index] = datsanitizeData(item))
+			response.data.forEach((item, index, array) => array[index] = convertStoryData(item))
 			successFunction(response.data);
 		})
 		.catch(function(error) {
@@ -30,7 +36,7 @@ export function createOrUpdateStory(story, successFunction, errorFunction) {
 	if (storyId === -1) {
 	  return axios.post('/task_tracker/stories.json', localStory)
 		  .then(function(response) {
-				successFunction(sanitizeData(response.data));
+				successFunction(convertStoryData(response.data));
 			})
 			.catch(function(error) {
 				errorFunction(error);
@@ -40,7 +46,7 @@ export function createOrUpdateStory(story, successFunction, errorFunction) {
 	//update
 	return axios.put(`/task_tracker/stories/${storyId}.json`, localStory)
 		.then(function(response) {
-			successFunction(sanitizeData(response.data));
+			successFunction(convertStoryData(response.data));
 		})
 		.catch(function(error) {
 			errorFunction(error);

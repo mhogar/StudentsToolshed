@@ -1,3 +1,5 @@
 json.extract! project, :id, :user_id, :name, :description, :created_at, :updated_at
-json.stories stories
+json.stories do
+	json.array! project.stories, partial: 'task_tracker/stories/story', as: :story
+end
 json.url task_tracker_project_url(project, format: :json)

@@ -1,7 +1,8 @@
 import axios from 'axios'
 
-function sanitizeData(data) {
+export function convertTaskData(data) {
 	return {
+		id: data.id,
 		storyId: data.story_id,
 		name: data.name,
 		completed: data.completed
@@ -11,7 +12,7 @@ function sanitizeData(data) {
 export function getTasksByStoryId(storyId, successFunction, errorFunction) {
 	return axios.get(`/task_tracker/tasks/?story_id=${storyId}`)
 		.then(function(response) {
-			response.data.forEach((item, index, array) => array[index] = datsanitizeData(item))
+			response.data.forEach((item, index, array) => array[index] = convertTaskData(item))
 			successFunction(response.data);
 		})
 		.catch(function(error) {
@@ -31,7 +32,7 @@ export function createOrUpdateTask(task, successFunction, errorFunction) {
 	if (taskId === -1) {
 		return axios.post('/task_tracker/tasks.json', localTask)
 			.then(function(response) {
-				successFunction(sanitizeData(response.data));
+				successFunction(convertTaskData(response.data));
 			})
 			.catch(function(error) {
 				errorFunction(error);
@@ -41,7 +42,7 @@ export function createOrUpdateTask(task, successFunction, errorFunction) {
 	//update
 	return axios.put(`/task_tracker/tasks/${taskId}.json`, localTask)
 		.then(function(response) {
-			successFunction(sanitizeData(response.data));
+			successFunction(convertTaskData(response.data));
 		})
 		.catch(function(error) {
 			errorFunction(error);
