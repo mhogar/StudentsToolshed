@@ -1,59 +1,27 @@
-import { getTasksByStoryId } from './taskApi';
+import apiHelper for 'api_helper'
 
-var storyData = [
-	{ id: 1, projectId: 1, name: "Story"},
-	{ id: 2, projectId: 1, name: "Story 2"}
-];
-
-function nextId() {
-	return storyData ? (storyData.sort((a, b) => a.id - b.id))[storyData.length - 1].id + 1 : 0;
+export function getStoriesByProjectId(projectId, successFunction, errorFunction) {
+	return apiHelper.createPromise(axios.get(`/task_tracker/stories/?project_id=${projectId}`), successFunction, errorFunction);
 }
 
-function findStory(storyId) {
-	return storyData.findIndex(item => item.id === storyId);
-}
-
-export function getStoriesByProjectId(projectId) {
-	let stories = storyData.filter(story => story.projectId === projectId);
-	stories.forEach((story) => story.tasks = getTasksByStoryId(story.id));
-
-	return stories;
-}
-
-
-export function createOrUpdateStory(story) {
-	let localStory = {};
-	localStory.id = story.id;
-	localStory.projectId = story.projectId;
-	localStory.name = story.name;
-	localStory.description = story.description;
+export function createOrUpdateStory(story, successFunction, errorFunction) {
+	let storyId = story.id;
+	let localStory = {
+		id: story.id,
+		project_id: story.projectId,
+		name: story.name,
+		description: story.description
+	};
 
 	//create
-	if (localStory.id === -1) {
-		localStory.id = nextId();
-
-		storyData.push(localStory);
-
-		return localStory;
+	if (storyId === -1) {
+	  return apiHelper.createPromise(axios.post('/task_tracker/stories.json', localStory), successFunction, errorFunction);
 	}
 
-	let index = findStory(localStory.id);
-	if (localStory !== -1) {
-		storyData[localStory] = localStory;
-
-		return localStory;
-	}
-
-	return null;
+	//update
+	return apiHelper.createPromise(axios.put(`/task_tracker/stories/${storyId}.json`, localStory), successFunction, errorFunction);
 }
 
-export function deleteStory(storyId) {
-	if (storyId === -1) {
-		return;
-	}
-
-	let index = findStory(storyId);
-	if (index !== -1) {
-		delete storyData[index];
-	}
+export function deleteStory(storyId, successFunction, errorFunction) {
+	return apiHelper.createPromise(axios.delete(`/task_tracker/stories/${storyId}.json`), successFunction, errorFunction);
 }

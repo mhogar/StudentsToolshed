@@ -1,58 +1,26 @@
-var taskData = [
-	{ id: 1, storyId: 1, name: "Task 1", completed: false },
-	{ id: 2, storyId: 1, name: "Another Task", completed: true },
-	{ id: 3, storyId: 2, name: "One More Task", completed: false }
-];
+import apiHelper for 'api_helper'
 
-var changeBuffer = {};
-
-function nextId() {
-	return taskData ? (taskData.sort((a, b) => a.id - b.id))[taskData.length - 1].id + 1 : 0;
+export function getTasksByStoryId(storyId, successFunction, errorFunction) {
+	return apiHelper.createPromise(axios.get(`/task_tracker/tasks/?story_id=${storyId}`), successFunction, errorFunction);
 }
 
-function findTask(taskId) {
-	return taskData.findIndex(item => item.id === taskId);
-}
-
-export function getTasksByStoryId(storyId) {
-	return taskData.filter(task => task.storyId === storyId);
-}
-
-export function createOrUpdateTask(task) {
-	let localTask = {};
-	localTask.id = task.id;
-	localTask.storyId = task.storyId;
-	localTask.name = task.name;
-	localTask.completed = task.completed;
+export function createOrUpdateTask(task, successFunction, errorFunction) {
+	let taskId = task.id;
+	let localTask = {
+		story_id: task.storyId,
+		name: task.name,
+		completed: task.completed
+	};
 	
 	//create
-	if (localTask.id === -1) {
-		localTask.id = nextId();
-		localTask.isNew = true;
-		taskData.push(localTask);
-
-		return localTask;
+	if (taskId === -1) {
+		return apiHelper.createPromise(axios.post('/task_tracker/tasks.json', localTask), successFunction, errorFunction);
 	}
 
-	let index = findTask(localTask.id);
-	if (index !== -1) {
-		
-
-		taskData[index] = localTask;
-
-		return localTask;
-	}
-
-	return null;
+	//update
+	return apiHelper.createPromise(axios.put(`/task_tracker/tasks/${taskId}.json`, localTask), successFunction, errorFunction);
 }
 
-export function deleteTask(taskId) {
-	if (taskId === -1){
-		return;
-	}
-
-	let index = findTask(taskId);
-	if (index !== -1) {
-		delete taskData[index];
-	}
+export function deleteTask(taskId, successFunction, errorFunction) {
+	return apiHelper.createPromise(axios.delete(`/task_tracker/tasks/${taskId}.json`), successFunction, errorFunction);
 }
