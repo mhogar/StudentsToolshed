@@ -45,6 +45,14 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
 
     test_model_fields(@project, response)
     assert_equal(response['stories'].count, 2)
+
+    story = response['stories'][0]
+    assert_not_nil(story['tasks'])
+    assert_equal(story['tasks'].count, 2)
+
+    story = response['stories'][1]
+    assert_not_nil(story['tasks'])
+    assert_empty(story['tasks'])
   end
 
   test "create project" do

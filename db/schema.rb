@@ -31,10 +31,12 @@ ActiveRecord::Schema.define(version: 2019_02_12_171727) do
 
   create_table "task_tracker_tasks", force: :cascade do |t|
     t.integer "story_id"
+    t.integer "project_id"
     t.string "name"
     t.boolean "completed", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_task_tracker_tasks_on_project_id"
     t.index ["story_id"], name: "index_task_tracker_tasks_on_story_id"
   end
 

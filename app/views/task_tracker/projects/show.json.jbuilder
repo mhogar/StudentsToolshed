@@ -1,1 +1,1 @@
-json.partial! 'task_tracker/projects/project', project: @project
+json.partial! 'task_tracker/projects/project', project: @project, stories: @stories

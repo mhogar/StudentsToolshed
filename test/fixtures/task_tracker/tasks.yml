@@ -1,11 +1,13 @@
 one:
   id: 1
+  project_id: 1
   story_id: 1
   name: New Task
   completed: false
 
 two:
   id: 2
+  project_id: 1
   story_id: 1
   name: Another Task
   completed: true

@@ -34,7 +34,14 @@ class TaskTracker::ProjectsController < ApplicationController
   # GET /task_tracker/projects/1
   # GET /task_tracker/projects/1.json
   def show
-    #TODO: get entire hierarchy (create new association between projects and stories)
+    @stories = []
+    tasks = @project.tasks
+
+    @project.stories.each do |story|
+      new_story = story.attributes
+      new_story[:tasks] = tasks.select { |task| task.story_id == story.id }
+      @stories.append(new_story)
+    end
   end
 
   # POST /task_tracker/projects

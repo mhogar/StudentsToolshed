@@ -3,6 +3,8 @@ require 'test_helper'
 class TaskTracker::TasksControllerTest < ActionDispatch::IntegrationTest
 	setup do
     @task = task_tracker_tasks(:one)
+    @task.project_id = nil
+    
     @new_task = TaskTracker::Task.new(story_id: 1, name: "A new task", completed: true)
   end
 

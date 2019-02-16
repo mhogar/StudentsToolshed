@@ -47,6 +47,9 @@ class TaskTracker::TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:story_id, :name, :completed)
+      args = params.require(:task).permit(:story_id, :name, :completed)
+      args[:project_id] = TaskTracker::Story.find(args[:story_id]).project_id
+
+      return args
     end
 end
