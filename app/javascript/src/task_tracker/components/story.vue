@@ -1,6 +1,9 @@
 <template>
 	<div class="story-segment ui segments">
 		<div class="story-segment-header ui purple segment">
+			<div v-if="loading" class="ui active inverted dimmer">
+				<div class="ui loader"></div>
+			</div>
 			<div class="ui grid">
 				<div class="left floated eleven wide column">
 					<div v-if="state === ''">
@@ -78,6 +81,7 @@
 		},
 		data: function() {
 			return {
+				loading: false,
 				state: this.story.name === '' ? 'create' : '',
 				editStory: this.story,
 				percent: 0
@@ -122,11 +126,13 @@
 
 				this.story.name = this.editStory.name;
 
+				this.loading = true;
 				Api.createOrUpdateStory(
 					this.story,
 					function(data) {
 						let newStory = data;
 						this.story.id = newStory.id;
+						this.loading = false;
 					}.bind(this),
 					function(error) {
 						console.log(error);
@@ -134,10 +140,12 @@
 				);
 			},
 			destroy: function(event) {
+				this.loading = true;
 				Api.deleteStory(
 					this.story.id,
 					function(response) {
 						this.$parent.deleteFromStories(this.story.id);
+						this.loading = false;
 					}.bind(this),
 					function(error) {
 						console.log(error);

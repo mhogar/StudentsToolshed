@@ -16,17 +16,6 @@ class TaskTracker::StoriesControllerTest < ActionDispatch::IntegrationTest
     assert_equal(response['tasks'].count, 2)
   end
 
-  test "get by project_id" do
-    get "/task_tracker/stories/?project_id=1", as: :json
-
-    assert_response :success
-    response = JSON.parse(@response.body)
-
-    assert_equal(response.count, 2)
-    test_model_fields(task_tracker_stories(:one), response[0])
-    test_model_fields(task_tracker_stories(:two), response[1])
-  end
-
   test "create story" do
     assert_difference('TaskTracker::Story.count', 1) do
       post "/task_tracker/stories/", params: { story: @new_story }, as: :json
@@ -47,7 +36,9 @@ class TaskTracker::StoriesControllerTest < ActionDispatch::IntegrationTest
 
   test "destroy story" do
     assert_difference('TaskTracker::Story.count', -1) do
-      delete "/task_tracker/stories/#{@story.id}", as: :json
+      assert_difference('TaskTracker::Task.count', -2) do
+        delete "/task_tracker/stories/#{@story.id}", as: :json
+      end
     end
 
     assert_response 204

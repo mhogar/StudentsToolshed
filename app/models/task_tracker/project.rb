@@ -7,8 +7,8 @@ class TaskTracker::Project < ApplicationRecord
 	DESC_MAX_LENGTH = 100
 
 	belongs_to :user
-	has_many :stories, class_name: "TaskTracker::Story", foreign_key: "project_id"
-	has_many :tasks, class_name: "TaskTracker::Task", foreign_key: "project_id"
+	has_many :stories, class_name: "TaskTracker::Story", foreign_key: "project_id", dependent: :delete_all
+	has_many :tasks, class_name: "TaskTracker::Task", foreign_key: "project_id", dependent: :delete_all
 
 	validates :user_id, presence: true
 	validates :name, length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH }

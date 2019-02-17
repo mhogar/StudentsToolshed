@@ -1,1 +1,0 @@
-json.array! @stories, partial: 'task_tracker/stories/story', as: :story

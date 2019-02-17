@@ -9,17 +9,6 @@ export function convertTaskData(data) {
 	};
 }
 
-export function getTasksByStoryId(storyId, successFunction, errorFunction) {
-	return axios.get(`/task_tracker/tasks/?story_id=${storyId}`)
-		.then(function(response) {
-			response.data.forEach((item, index, array) => array[index] = convertTaskData(item))
-			successFunction(response.data);
-		})
-		.catch(function(error) {
-			errorFunction(error);
-		});
-}
-
 export function createOrUpdateTask(task, successFunction, errorFunction) {
 	let taskId = task.id;
 	let localTask = {

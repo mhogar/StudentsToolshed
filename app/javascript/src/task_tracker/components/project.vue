@@ -1,11 +1,9 @@
 <template>
 	<div>
-		<div v-if="loading" class="ui basic segment">
-			<div class="ui active inverted dimmer">
-				<div class="ui text loader">Loading</div>
-			</div>
+		<div v-if="loading" class="ui active inverted dimmer">
+			<div class="ui loader"></div>
 		</div>
-		<div v-else>
+		<div v-if="firstLoad">
 			<div class="ui grid">
 				<div class="twelve wide column">
 					<h2 class="ui header" v-if="state === ''">
@@ -79,7 +77,8 @@
 		},
 		data: function() {
 			return {
-				loading: true,
+				firstLoad: false,
+				loading: false,
 				state: '',
 				project: {},
 				editProject: {}
@@ -108,6 +107,7 @@
 				this.loading = true;
 				Api.getProjectById(this.projectId, function(data) {
 					this.project = data;
+					this.firstLoad = true;
 					this.loading = false;
 				}.bind(this),
 				function(error) {
@@ -150,9 +150,12 @@
 				this.project.name = this.editProject.name;
 				this.project.description = this.editProject.description;
 
+				this.loading = true;
 				Api.updateProject(
 					this.project,
-					function(data) {},
+					function(data) {
+						this.loading = false;
+					}.bind(this),
 					function(error) {
 						console.log(error);
 					}

@@ -14,17 +14,6 @@ export function convertStoryData(data) {
 	return newData;
 }
 
-export function getStoriesByProjectId(projectId, successFunction, errorFunction) {
-	return axios.get(`/task_tracker/stories/?project_id=${projectId}`)
-		.then(function(response) {
-			response.data.forEach((item, index, array) => array[index] = convertStoryData(item))
-			successFunction(response.data);
-		})
-		.catch(function(error) {
-			errorFunction(error);
-		});
-}
-
 export function createOrUpdateStory(story, successFunction, errorFunction) {
 	let storyId = story.id;
 	let localStory = {

@@ -75,7 +75,11 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
 
   test "destroy project" do
     assert_difference('TaskTracker::Project.count', -1) do
-      delete "/task_tracker/projects/#{@project.id}", as: :json
+      assert_difference('TaskTracker::Story.count', -2) do
+        assert_difference('TaskTracker::Task.count', -2) do
+          delete "/task_tracker/projects/#{@project.id}", as: :json
+        end
+      end
     end
 
     assert_response 204

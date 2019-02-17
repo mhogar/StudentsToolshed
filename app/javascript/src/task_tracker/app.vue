@@ -1,21 +1,17 @@
 <template>
 	<div>
-		<div v-if="loading" class="ui basic segment">
-			<div class="ui active inverted dimmer">
-				<div class="ui text loader">Loading</div>
-			</div>
+		<div v-if="loading" class="ui active inverted dimmer">
+			<div class="ui loader"></div>
 		</div>
-		<div v-else>
-			<div class="ui three cards" v-if="selectedProject === null">
-				<ProjectCard class="ui cards" v-for="project in projects" :key="project.id" v-bind:project="project"></ProjectCard>
-				<div class="ui link raised card" v-on:click="createProject($event)">
-					<div class="content">
-						<i class ="icon plus circle"></i> Add a new project
-					</div>
+		<div class="ui three cards" v-if="selectedProject === null">
+			<ProjectCard class="ui cards" v-for="project in projects" :key="project.id" v-bind:project="project"></ProjectCard>
+			<div class="ui link raised card" v-on:click="createProject($event)">
+				<div class="content">
+					<i class ="icon plus circle"></i> Add a new project
 				</div>
 			</div>
-			<Project v-bind:projectId="selectedProject.id" v-else></Project>
 		</div>
+		<Project v-bind:projectId="selectedProject.id" v-else></Project>
 	</div>
 </template>
 

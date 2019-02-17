@@ -15,17 +15,6 @@ class TaskTracker::TasksControllerTest < ActionDispatch::IntegrationTest
     test_model_fields(@task, JSON.parse(@response.body))
   end
 
-  test "get by story_id" do
-    get "/task_tracker/tasks/?story_id=1", as: :json
-
-    assert_response :success
-    response = JSON.parse(@response.body)
-
-    assert_equal(response.count, 2)
-    test_model_fields(task_tracker_tasks(:one), response[0])
-    test_model_fields(task_tracker_tasks(:two), response[1])
-  end
-
   test "create task" do
     assert_difference('TaskTracker::Task.count', 1) do
       post "/task_tracker/tasks/", params: { task: @new_task }, as: :json

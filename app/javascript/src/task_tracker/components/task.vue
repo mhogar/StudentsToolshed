@@ -1,6 +1,9 @@
 <template>
 	<div class="ui segments">
 		<div v-bind:class="'ui segment ' + (task.completed ? 'green task-complete' : 'yellow task-todo')">
+			<div v-if="loading" class="ui active inverted dimmer">
+				<div class="ui loader"></div>
+			</div>
 			<div class="ui grid">
 				<div class="left floated twelve wide column">
 					<div v-if="state === ''">
@@ -51,6 +54,7 @@
 		},
 		data: function() {
 			return {
+				loading: false,
 				state: this.task.name === '' ? 'create' : '',
 				editTask: this.task
 			};
@@ -61,9 +65,12 @@
 				this.$parent.updateProgressBar();
 
 				if (this.state !== 'create') {
+					this.loading = true;
 					Api.createOrUpdateTask(
 						this.task,
-						function(data) {},
+						function(data) {
+							this.loading = false;
+						}.bind(this),
 						function(error) {
 							console.log(error);
 						}
@@ -87,11 +94,13 @@
 
 				this.task.name = this.editTask.name;
 
+				this.loading = true;
 				Api.createOrUpdateTask(
 					this.task,
 					function(data) {
 						let newTask = data;
 						this.task.id = newTask.id;
+						this.loading = false;
 					}.bind(this),
 					function(error) {
 						console.log(error);
@@ -99,10 +108,12 @@
 				);
 			},
 			destroy: function(event) {
+				this.loading = true;
 				Api.deleteTask(
 					this.task.id,
 					function(response) {
 						this.$parent.deleteFromTasks(this.task.id);
+						this.loading = false;
 					}.bind(this),
 					function(error) {
 						console.log(error);
