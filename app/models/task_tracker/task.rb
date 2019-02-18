@@ -5,7 +5,7 @@ class TaskTracker::Task < ApplicationRecord
 	NAME_MAX_LENGTH = 100
 
 	has_one :object_map, as: :object, class_name: "TaskTracker::ObjectMap"
-	has_one :interface, through: :object_map, source: :task_tracker_interface
+	has_one :fractal_interface, through: :object_map, source: :task_tracker_interface
 
 	belongs_to :story, class_name: "TaskTracker::Story"
 

@@ -1,13 +1,18 @@
 require 'test_helper'
 
 class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   setup do
     @project = task_tracker_projects(:one)
     @new_project = TaskTracker::Project.new(name: "A new project", description: "This is the description")
+
+    sign_in users(:alice)
   end
 
   test "get stats" do
-    get "/task_tracker/project_stats/", as: :json
+    url = "/task_tracker/project_stats/"
+    get url, as: :json
 
     assert_response :success
 
@@ -35,10 +40,15 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
     assert_equal(response.count, 2)
     test_stats(stats_one, response[0])
     test_stats(stats_two, response[1])
+
+    test_no_user do
+      get url, as: :json
+    end
   end
 
   test "show project" do
-    get "/task_tracker/projects/#{@project.id}", as: :json
+    url = "/task_tracker/projects/#{@project.id}"
+    get url, as: :json
 
     assert_response :success
     response = JSON.parse(@response.body)
@@ -53,27 +63,55 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
     story = response['stories'][1]
     assert_not_nil(story['tasks'])
     assert_empty(story['tasks'])
+
+    test_no_user do
+      get url, as: :json
+    end
+
+    test_wrong_user do
+      get url, as: :json
+    end
   end
 
   test "create project" do
-    assert_difference('TaskTracker::Project.count') do
-      post "/task_tracker/projects/", params: { project: @new_project }, as: :json
+    url = "/task_tracker/projects/"
+    params = { project: @new_project }
+
+    assert_difference('TaskTracker::Project.count', 1) do
+      post url, params: params, as: :json
     end
 
-    assert_response 201
+    assert_response :created
     test_model_fields(@new_project, JSON.parse(@response.body))
+
+    test_no_user do
+      post url, params: params, as: :json
+    end
   end
 
   test "update project" do
+    url = "/task_tracker/projects/#{@project.id}"
+    params = { project: @new_project }
+
     assert_difference('TaskTracker::Project.count', 0) do
-      put "/task_tracker/projects/#{@project.id}", params: { project: @new_project }, as: :json
+      put url, params: params, as: :json
     end
 
-    assert_response 200
+    assert_response :ok
     test_model_fields(@new_project, JSON.parse(@response.body))
+
+    test_no_user do
+      put url, params: params, as: :json
+    end
+
+    test_wrong_user do
+      put url, params: params, as: :json
+    end
   end
 
   test "destroy project" do
+    url = "/task_tracker/projects/#{@project.id}"
+
     assert_difference('TaskTracker::Project.count', -1) do
       assert_difference('TaskTracker::Story.count', -2) do
         assert_difference('TaskTracker::Task.count', -2) do
@@ -82,7 +120,19 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
       end
     end
 
-    assert_response 204
+    assert_response :no_content
+  end
+
+  test "destroy project with wrong user" do
+    url = "/task_tracker/projects/#{@project.id}"
+    
+    test_no_user do
+      delete url, as: :json
+    end
+
+    test_wrong_user do
+      delete url, as: :json
+    end
   end
 
   private
@@ -92,5 +142,17 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
 
     def test_stats(expected, actual)
       ['id', 'name', 'description', 'num_stories', 'num_tasks', 'percent'].each { |field| assert_equal(expected[field], actual[field], "stats #{field} did not match") }
+    end
+
+    def test_no_user
+      sign_out :user
+      yield
+      assert_response :unauthorized
+    end
+
+    def test_wrong_user
+      sign_in users(:bob)
+      yield
+      assert_response :unauthorized
     end
 end

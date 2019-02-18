@@ -1,11 +1,11 @@
 class TaskTracker::ProjectsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  #before_action :set_user
   before_action :set_project, only: [:show, :update, :destroy]
+  before_action :set_user
+  before_action :require_same_user, except: [:stats, :create]
 
   def stats
     @project_stats = []
-    @user = User.first
 
     @user.task_tracker_interface.projects.order('id').each do |project|
       stats = {}
@@ -32,8 +32,6 @@ class TaskTracker::ProjectsController < ApplicationController
   # GET /task_tracker/projects/1
   # GET /task_tracker/projects/1.json
   def show
-    @user = User.first
-
     @stories = []
     stories = @project.stories
 
@@ -52,6 +50,7 @@ class TaskTracker::ProjectsController < ApplicationController
   # POST /task_tracker/projects.json
   def create
     @project = TaskTracker::Project.new(project_params)
+    @project.fractal_interface = @user.task_tracker_interface
 
     if @project.save
       render :show, status: :created, location: @project
@@ -93,5 +92,11 @@ class TaskTracker::ProjectsController < ApplicationController
       end
 
       @user = current_user
+    end
+
+    def require_same_user
+      if @user != @project.fractal_interface.user
+        render json: { error: 'You are authorized to access this project' }, status: :unauthorized
+      end
     end
 end

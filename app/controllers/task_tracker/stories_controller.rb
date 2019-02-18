@@ -1,6 +1,8 @@
 class TaskTracker::StoriesController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_story, only: [:show, :update, :destroy]
+  before_action :set_user
+  before_action :require_same_user, except: [:create]
 
   # GET /task_tracker/stories/1.json
   def show
@@ -9,6 +11,7 @@ class TaskTracker::StoriesController < ApplicationController
   # POST /task_tracker/stories.json
   def create
     @story = TaskTracker::Story.new(story_params)
+    @story.fractal_interface = @user.task_tracker_interface
 
     if @story.save
       render :show, status: :created, location: @story
@@ -41,5 +44,19 @@ class TaskTracker::StoriesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def story_params
       params.require(:story).permit(:project_id, :name)
+    end
+
+    def set_user
+      if not user_signed_in?
+        render json: { error: 'A user is not signed in' }, status: :unauthorized
+      end
+
+      @user = current_user
+    end
+
+    def require_same_user
+      if @user != @story.fractal_interface.user
+        render json: { error: 'You are authorized to access this story' }, status: :unauthorized
+      end
     end
 end
