@@ -9,11 +9,6 @@ class TaskTracker::TaskTest < ActiveSupport::TestCase
 		assert @task.valid?
 	end
 
-	test "task without project id is invalid" do
-		@task.project_id = nil
-		assert_not @task.valid?
-	end
-
 	test "task without story id is invalid" do
 		@task.story_id = nil
 		assert_not @task.valid?

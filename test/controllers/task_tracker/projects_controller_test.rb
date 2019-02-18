@@ -3,7 +3,7 @@ require 'test_helper'
 class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @project = task_tracker_projects(:one)
-    @new_project = TaskTracker::Project.new(user_id: 1, name: "A new project", description: "This is the description")
+    @new_project = TaskTracker::Project.new(name: "A new project", description: "This is the description")
   end
 
   test "get stats" do
@@ -87,7 +87,7 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
 
   private
     def test_model_fields(src_model, test_model)
-      ['user_id', 'name', 'description'].each { |field| assert_equal(src_model[field], test_model[field]) }
+      ['name', 'description'].each { |field| assert_equal(src_model[field], test_model[field]) }
     end
 
     def test_stats(expected, actual)

@@ -4,10 +4,11 @@ class TaskTracker::Task < ApplicationRecord
 	NAME_MIN_LENGTH = 5
 	NAME_MAX_LENGTH = 100
 
-	belongs_to :story, class_name: "TaskTracker::Story"
-	belongs_to :project, class_name: "TaskTracker::Project"
+	has_one :object_map, as: :object, class_name: "TaskTracker::ObjectMap"
+	has_one :interface, through: :object_map, source: :task_tracker_interface
 
-	validates :project_id, presence: true
+	belongs_to :story, class_name: "TaskTracker::Story"
+
 	validates :story_id, presence: true
 	validates :name, length: { minimum: NAME_MIN_LENGTH, maximum: NAME_MAX_LENGTH }
 end

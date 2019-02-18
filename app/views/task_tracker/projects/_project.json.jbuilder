@@ -1,4 +1,4 @@
-json.extract! project, :id, :user_id, :name, :description, :created_at, :updated_at
+json.extract! project, :id, :name, :description, :created_at, :updated_at
 json.stories do
 	json.array! project.stories, partial: 'task_tracker/stories/story', as: :story
 end

@@ -1,2 +1,6 @@
-<%= javascript_pack_tag 'task_tracker' %>
-<div id="app"></div>
+<% if user_signed_in? %>
+	<%= javascript_pack_tag 'task_tracker' %>
+	<div id="app"></div>
+<% else %>
+	<h1 class="ui center aligned header">You must be signed in to use this app.</h1>
+<% end %>

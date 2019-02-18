@@ -1,0 +1,29 @@
+project_one:
+  task_tracker_interface_id: 1
+  object_type: 'TaskTracker::Project'
+  object_id: 1
+
+project_two:
+  task_tracker_interface_id: 1
+  object_type: 'TaskTracker::Project'
+  object_id: 2
+
+story_one:
+  task_tracker_interface_id: 1
+  object_type: 'TaskTracker::Story'
+  object_id: 1
+
+story_two:
+  task_tracker_interface_id: 1
+  object_type: 'TaskTracker::Story'
+  object_id: 2
+
+task_one:
+  task_tracker_interface_id: 1
+  object_type: 'TaskTracker::Task'
+  object_id: 1
+
+task_two:
+  task_tracker_interface_id: 1
+  object_type: 'TaskTracker::Task'
+  object_id: 2

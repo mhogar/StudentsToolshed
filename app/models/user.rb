@@ -4,5 +4,5 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :projects, class_name: "TaskTracker::Project"
+  has_one :task_tracker_interface
 end

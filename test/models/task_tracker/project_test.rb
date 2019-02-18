@@ -9,11 +9,6 @@ class TaskTrackerProjectTest < ActiveSupport::TestCase
 		assert @project.valid?
 	end
 
-	test "project without user id is invalid" do
-		@project.user_id = nil
-		assert_not @project.valid?
-	end
-
 	test "project without name is invalid" do
 		@project.name = nil
 		assert_not @project.valid?

@@ -10,15 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_12_171727) do
+ActiveRecord::Schema.define(version: 2019_02_17_181835) do
+
+  create_table "task_tracker_interfaces", force: :cascade do |t|
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_task_tracker_interfaces_on_user_id"
+  end
+
+  create_table "task_tracker_object_maps", force: :cascade do |t|
+    t.integer "task_tracker_interface_id"
+    t.string "object_type"
+    t.integer "object_id"
+    t.index ["object_type", "object_id"], name: "index_task_tracker_object_map_on_obj_type_and_obj_id"
+    t.index ["task_tracker_interface_id"], name: "index_task_tracker_object_maps_on_task_tracker_interface_id"
+  end
 
   create_table "task_tracker_projects", force: :cascade do |t|
-    t.integer "user_id"
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_task_tracker_projects_on_user_id"
   end
 
   create_table "task_tracker_stories", force: :cascade do |t|
@@ -31,12 +42,10 @@ ActiveRecord::Schema.define(version: 2019_02_12_171727) do
 
   create_table "task_tracker_tasks", force: :cascade do |t|
     t.integer "story_id"
-    t.integer "project_id"
     t.string "name"
     t.boolean "completed", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["project_id"], name: "index_task_tracker_tasks_on_project_id"
     t.index ["story_id"], name: "index_task_tracker_tasks_on_story_id"
   end
 

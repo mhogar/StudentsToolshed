@@ -1,18 +1,23 @@
 class TaskTracker::ProjectsController < ApplicationController
   skip_before_action :verify_authenticity_token
+  #before_action :set_user
   before_action :set_project, only: [:show, :update, :destroy]
 
   def stats
     @project_stats = []
+    @user = User.first
 
-    TaskTracker::Project.all.each do |project|
+    @user.task_tracker_interface.projects.order('id').each do |project|
       stats = {}
+
       stats[:id] = project.id
       stats[:name] = project.name
       stats[:description] = project.description
-      stats[:num_stories] = project.stories.count
 
-      tasks = project.tasks
+      story_ids = project.stories.select('id')
+      stats[:num_stories] = story_ids.count
+
+      tasks = @user.task_tracker_interface.tasks.select('completed').where(story_id: story_ids)
       stats[:num_tasks] = tasks.count
       stats[:percent] = tasks.select { |task| task.completed == true }.count
 
@@ -27,10 +32,16 @@ class TaskTracker::ProjectsController < ApplicationController
   # GET /task_tracker/projects/1
   # GET /task_tracker/projects/1.json
   def show
-    @stories = []
-    tasks = @project.tasks
+    @user = User.first
 
-    @project.stories.each do |story|
+    @stories = []
+    stories = @project.stories
+
+    story_ids = []
+    stories.each { |story| story_ids << story.id }
+    tasks = @user.task_tracker_interface.tasks.where(story_id: story_ids)
+
+    stories.each do |story|
       new_story = story.attributes
       new_story[:tasks] = tasks.select { |task| task.story_id == story.id }
       @stories.append(new_story)
@@ -73,6 +84,14 @@ class TaskTracker::ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:user_id, :name, :description)
+      params.require(:project).permit(:name, :description)
+    end
+
+    def set_user
+      if not user_signed_in?
+        render json: { error: 'A user is not signed in' }, status: :unauthorized
+      end
+
+      @user = current_user
     end
 end
