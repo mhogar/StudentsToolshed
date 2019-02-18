@@ -11,7 +11,7 @@
 					</div>
 					<EditForm v-if="state !== ''"
 						v-bind:saveFunc="function(event) { state !== '' && update(event) }"
-						v-bind:discardFunc="function(event) {state === 'create' ? destroy(event) : state = ''}"
+						v-bind:discardFunc="function(event) {state === 'create' ? discardCreate(event) : state = ''}"
 						v-bind:model="editTask"
 						v-bind:id_name="'task-name-input-'">
 					</EditForm>
@@ -106,6 +106,9 @@
 						console.log(error);
 					}
 				);
+			},
+			discardCreate: function(event) {
+				this.$parent.deleteFromTasks(this.task.id);
 			},
 			destroy: function(event) {
 				this.loading = true;

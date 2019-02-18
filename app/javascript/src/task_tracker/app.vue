@@ -70,7 +70,6 @@
 						data.numTasks = 0;
 						data.percent = 0;
 
-						data.isNew = true;
 						this.projects.push(data);
 						this.projectLoading = false;
 					}.bind(this),

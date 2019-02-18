@@ -11,7 +11,7 @@
 					</div>
 					<EditForm v-if="state !== ''"
 						v-bind:saveFunc="function(event) { state !== '' && update(event) }"
-						v-bind:discardFunc="function(event) {state === 'create' ? destroy(event) : state = ''}"
+						v-bind:discardFunc="function(event) {state === 'create' ? discardCreate(event) : state = ''}"
 						v-bind:model="editStory"
 						v-bind:id_name="'story-name-input-'">
 					</EditForm>
@@ -138,6 +138,9 @@
 						console.log(error);
 					}
 				);
+			},
+			discardCreate: function(event) {
+				this.$parent.deleteFromStories(this.story.id);
 			},
 			destroy: function(event) {
 				this.loading = true;

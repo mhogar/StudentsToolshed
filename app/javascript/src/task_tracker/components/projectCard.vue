@@ -11,8 +11,8 @@
 					  	</div>
 					</div>
 				</div>
-				<div class="right floated three wide column" v-if="project.isNew">
-					<div class="ui icon basic circular button" v-on:click.stop="$parent.deleteFromProjects(project.id)">
+				<div class="right floated three wide column" v-if="isEmpty">
+					<div class="ui icon basic circular button" v-on:click.stop="discardCreate($event)">
 						<i class="remove icon"></i>
 					</div>
 				</div>
@@ -39,6 +39,9 @@
 		computed: {
 			progressBarId: function() {
 				return 'project-progress-bar-' + this.project.id;
+			},
+			isEmpty: function() {
+				return this.project.numStories == 0 && this.project.numTasks == 0
 			}
 		},
 		methods: {
@@ -46,6 +49,9 @@
 				$('#' + this.progressBarId).progress({
 					percent: this.project.percent
 				});
+			},
+			discardCreate: function(event) {
+				this.$parent.deleteFromProjects(this.project.id)
 			}
 		},
 		mounted: function() {
