@@ -5,6 +5,7 @@
 		</div>
 		<div class="ui three cards" v-if="selectedProject === null">
 			<ProjectCard class="ui cards" v-for="project in projects" :key="project.id" v-bind:project="project"></ProjectCard>
+			<ProjectCardPlaceholder v-if="projectLoading" />
 			<div class="ui link raised card" v-on:click="createProject($event)">
 				<div class="content">
 					<i class ="icon plus circle"></i> Add a new project
@@ -20,16 +21,19 @@
 
 	import projectComponent from './components/project.vue'
 	import projectCardComponent from './components/projectCard.vue'
+	import projectCardPlaceholderComponent from './components/projectCardPlaceholder.vue'
 
 	export default {
 		components: {
 			'Project': projectComponent,
-			'ProjectCard': projectCardComponent
+			'ProjectCard': projectCardComponent,
+			'ProjectCardPlaceholder': projectCardPlaceholderComponent
 		},
 		data: function() {
 			return {
 				loading: false,
 				projects: [],
+				projectLoading: false,
 				selectedProject: null
 			};
 		},
@@ -40,16 +44,11 @@
 
 				this.loadProjects();
 			},
-			loadProjects: function(callback = null) {
+			loadProjects: function() {
 				this.loading = true;
 				Api.getProjectStats(function(data) {
 					this.projects = data;
-
-					if (callback !== null) {
-						callback();
-					} else {
-						this.loading = false;
-					}
+					this.loading = false;
 				}.bind(this),
 				function(error) {
 					console.log(error);
@@ -60,21 +59,20 @@
 				window.scrollTo(0, 0);
 			},
 			createProject: function(event) {
-				this.loading = true;
+				this.projectLoading = true;
 				Api.createProject(
 					{
-						userId: 1,
 						name: 'New Project',
 						description: ''
 					},
 					function(data) {
-						this.loadProjects(function() {
-							let index = this.projects.findIndex(item => item.id === data.id);
-							if (index !== -1) {
-								this.projects[index].isNew = true;
-							}
-							this.loading = false;
-						}.bind(this));
+						data.numStories = 0;
+						data.numTasks = 0;
+						data.percent = 0;
+
+						data.isNew = true;
+						this.projects.push(data);
+						this.projectLoading = false;
 					}.bind(this),
 					function(error) {
 						console.log(error);
@@ -84,10 +82,12 @@
 			deleteFromProjects: function(projectId) {
 				let index = this.projects.findIndex(item => item.id === projectId);
 				if (index !== -1) {
+					this.$delete(this.projects, index);
+					this.projectLoading = true;
 					Api.deleteProject(
 						projectId,
 						function(response) {
-							this.$delete(this.projects, index);
+							this.projectLoading = false;
 						}.bind(this),
 						function(error) {
 							console.log(error);

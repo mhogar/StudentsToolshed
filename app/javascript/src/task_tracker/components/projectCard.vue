@@ -41,12 +41,18 @@
 				return 'project-progress-bar-' + this.project.id;
 			}
 		},
+		methods: {
+			updateProgressBar: function() {
+				$('#' + this.progressBarId).progress({
+					percent: this.project.percent
+				});
+			}
+		},
 		mounted: function() {
-			$('#' + this.progressBarId).progress({
-				percent: this.project.percent
-			});
-
-			//console.log(this.project);
+			this.updateProgressBar();
+		},
+		updated: function() {
+			this.updateProgressBar();
 		}
 	};
 </script>

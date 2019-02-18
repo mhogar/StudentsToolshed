@@ -5,7 +5,6 @@ export function convertProjectData(data) {
 	let newData =
 	{
 		id: data.id,
-		userId: data.user_id,
 		name: data.name,
 		description: data.description
 	};
@@ -51,7 +50,6 @@ export function getProjectById(id, successFunction, errorFunction) {
 
 export function createProject(project, successFunction, errorFunction) {
 	let localProject = {
-  		user_id: project.userId,
     	name: project.name,
     	description: project.description
 	};
@@ -68,7 +66,6 @@ export function createProject(project, successFunction, errorFunction) {
 export function updateProject(project, successFunction, errorFunction) {
 	var projectId = project.id;
 	var localProject = {
-  		user_id: project.userId,
     	name: project.name,
     	description: project.description
 	};
