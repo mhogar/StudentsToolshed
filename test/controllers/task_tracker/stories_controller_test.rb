@@ -39,7 +39,18 @@ class TaskTracker::StoriesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :created
-    test_model_fields(@new_story, JSON.parse(@response.body))
+    response = JSON.parse(@response.body)
+    test_model_fields(@new_story, response)
+
+    #test this user can access the new story
+    show_url = "/task_tracker/stories/#{response['id']}"
+    get show_url, as: :json
+    assert_response :success
+
+    #test accessing the new story with a different user is denied
+    test_wrong_user do
+      get show_url, as: :json
+    end
 
     test_no_user do
       post url, params: params, as: :json

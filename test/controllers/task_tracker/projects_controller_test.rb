@@ -12,8 +12,8 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
 
   test "get stats" do
     url = "/task_tracker/project_stats/"
-    get url, as: :json
 
+    get url, as: :json
     assert_response :success
 
     project = task_tracker_projects(:one)
@@ -44,6 +44,13 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
     test_no_user do
       get url, as: :json
     end
+
+    #test different results with different user
+    sign_in users(:bob)
+
+    get url, as: :json
+    assert_response :success
+    assert_equal(JSON.parse(@response.body).count, 0)
   end
 
   test "show project" do
@@ -82,7 +89,18 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :created
-    test_model_fields(@new_project, JSON.parse(@response.body))
+    response = JSON.parse(@response.body)
+    test_model_fields(@new_project, response)
+
+    #test this user can access the new project
+    show_url = "/task_tracker/projects/#{response['id']}"
+    get show_url, as: :json
+    assert_response :success
+
+    #test accessing the new project with a different user is denied
+    test_wrong_user do
+      get show_url, as: :json
+    end
 
     test_no_user do
       post url, params: params, as: :json
