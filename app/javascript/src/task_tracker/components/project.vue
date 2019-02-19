@@ -82,6 +82,9 @@
 			};
 		},
 		computed: {
+			config: function() {
+				return projectConfig;
+			},
 			numStories: function () {
 				let stories = this.project.stories;
 				return stories ? stories.length : 0;

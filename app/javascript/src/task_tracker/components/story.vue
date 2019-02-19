@@ -15,7 +15,7 @@
 						v-bind:discardFunc="function(event) {state === 'create' ? discardCreate(event) : state = ''}"
 						v-bind:model="editStory"
 						v-bind:id_name="'story-name-input-'"
-						v-bind:validations="{ required: true, minLength: 5, maxLength: 100 }">
+						v-bind:validations="{ required: true, minLength: config.minNameLength, maxLength: config.maxNameLength }">
 					</EditForm>
 				</div>
 				<div class="right floated four wide column">
@@ -94,6 +94,9 @@
 			};
 		},
 		computed: {
+			config: function() {
+				return storyConfig;
+			},
 			numTasks: function () {
 				let tasks = this.story.tasks;
 				return tasks ? tasks.length : 0;

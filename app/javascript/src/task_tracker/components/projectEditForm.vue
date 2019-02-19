@@ -22,13 +22,13 @@
 			return {
 				nameValidations: {
 					required: true,
-					minLength: 1,
-					maxLength: 20
+					minLength: projectConfig.minNameLength,
+					maxLength: projectConfig.maxNameLength
 				},
 				descValidations: {
 					required: false,
-					minLength: 10,
-					maxLength: 100
+					minLength: projectConfig.minDescLength,
+					maxLength: projectConfig.maxDescLength
 				}
 			};
 		},
@@ -55,7 +55,7 @@
 					$('#' + popupId).popup('show');
 					return false;
 				}
-				
+
 				if (field.length > validations.maxLength) {
 					this.createPopup(popupId, 'Max length: ' + validations.maxLength);
 					$('#' + popupId).popup('show');

@@ -60,8 +60,9 @@
 			}
 		},
 		mounted: function() {
-
 			document.getElementById(this.inputId).focus();
+
+			console.log(this.validations);
 		}
 	};
 </script>

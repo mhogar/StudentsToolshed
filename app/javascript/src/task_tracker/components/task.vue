@@ -14,7 +14,7 @@
 						v-bind:discardFunc="function(event) {state === 'create' ? discardCreate(event) : state = ''}"
 						v-bind:model="editTask"
 						v-bind:id_name="'task-name-input-'"
-						v-bind:validations="{ required: true, minLength: 5, maxLength: 100 }">
+						v-bind:validations="{ required: true, minLength: config.minNameLength, maxLength: config.maxNameLength }">
 					</EditForm>
 				</div>
 				<div class="left floated two wide column">
@@ -63,6 +63,11 @@
 				state: this.task.name === '' ? 'create' : '',
 				editTask: this.task
 			};
+		},
+		computed: {
+			config: function() {
+				return taskConfig;
+			}
 		},
 		methods: {
 			toggleDone: function (event) {

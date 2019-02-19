@@ -1,3 +1,22 @@
+<script type="text/javascript">
+	var projectConfig = {
+		minNameLength: <%= TaskTracker::Project::NAME_MIN_LENGTH %>,
+		maxNameLength: <%= TaskTracker::Project::NAME_MAX_LENGTH %>,
+		minDescLength: <%= TaskTracker::Project::DESC_MIN_LENGTH %>,
+		maxDescLength: <%= TaskTracker::Project::DESC_MAX_LENGTH %>
+	};
+
+	var storyConfig = {
+		minNameLength: <%= TaskTracker::Story::NAME_MIN_LENGTH %>,
+		maxNameLength: <%= TaskTracker::Story::NAME_MAX_LENGTH %>
+	};
+
+	var taskConfig = {
+		minNameLength: <%= TaskTracker::Task::NAME_MIN_LENGTH %>,
+		maxNameLength: <%= TaskTracker::Task::NAME_MAX_LENGTH %>
+	};
+</script>
+
 <% if user_signed_in? %>
 	<%= javascript_pack_tag 'task_tracker' %>
 	<div id="app"></div>
