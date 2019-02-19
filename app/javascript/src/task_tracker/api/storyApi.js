@@ -1,5 +1,7 @@
-import axios from 'axios'
+import axios from 'axios';
 import { convertTaskData } from './taskApi';
+
+const DemoApi = require('./storyApiDemo');
 
 export function convertStoryData(data) {
 	let newData = {
@@ -15,6 +17,11 @@ export function convertStoryData(data) {
 }
 
 export function createOrUpdateStory(story, successFunction, errorFunction) {
+	if (config.demoMode) {
+		DemoApi.createOrUpdateStory(story, successFunction, errorFunction);
+		return;
+	}
+
 	let storyId = story.id;
 	let localStory = {
 		project_id: story.projectId,
@@ -23,17 +30,19 @@ export function createOrUpdateStory(story, successFunction, errorFunction) {
 
 	//create
 	if (storyId === -1) {
-	  return axios.post('/task_tracker/stories.json', localStory)
-		  .then(function(response) {
+		axios.post('/task_tracker/stories.json', localStory)
+			.then(function(response) {
 				successFunction(convertStoryData(response.data));
 			})
 			.catch(function(error) {
 				errorFunction(error);
 			});
+
+		return;
 	}
 
 	//update
-	return axios.put(`/task_tracker/stories/${storyId}.json`, localStory)
+	axios.put(`/task_tracker/stories/${storyId}.json`, localStory)
 		.then(function(response) {
 			successFunction(convertStoryData(response.data));
 		})
@@ -43,7 +52,12 @@ export function createOrUpdateStory(story, successFunction, errorFunction) {
 }
 
 export function deleteStory(storyId, successFunction, errorFunction) {
-	return axios.delete(`/task_tracker/stories/${storyId}.json`)
+	if (config.demoMode) {
+		DemoApi.deleteStory(storyId, successFunction, errorFunction);
+		return;
+	}
+
+	axios.delete(`/task_tracker/stories/${storyId}.json`)
 		.then(function(response) {
 			successFunction('success');
 		})

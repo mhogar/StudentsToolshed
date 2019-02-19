@@ -24,7 +24,7 @@
 					</div>
 				</div>
 				<div class="left floated one wide column">
-					<EditMenu 
+					<EditMenu  v-if="state !== 'create'"
 						v-bind:editFunc="edit" 
 						v-bind:deleteFunc="destroy" 
 						v-bind:options="{ menuPointDir: 'top left' }">

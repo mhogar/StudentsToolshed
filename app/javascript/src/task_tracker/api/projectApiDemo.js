@@ -1,27 +1,16 @@
-import { getStoriesByProjectId } from './storyApi';
+import { getStoriesByProjectId } from './storyApiDemo';
 
-var projectData = [
-	{
-		id: 1,
-		name: 'Project Name',
-		description: 'Project Description',
-	},
-	{
-		id: 2,
-		name: 'Another Project',
-		description: 'Another Description',
-	}
-];
+var projectData = [];
 
 function nextId() {
-	return projectData ? (projectData.sort((a, b) => a.id - b.id))[projectData.length - 1].id + 1 : 0;
+	return projectData.length > 0 ? (projectData.sort((a, b) => a.id - b.id))[projectData.length - 1].id + 1 : 0;
 }
 
 function findProject(projectId) {
 	return projectData.findIndex(item => item.id === projectId);
 }
 
-export function getProjectStats() {
+export function getProjectStats(successFunction, errorFunction) {
 	let projectStats = [];
 
 	projectData.forEach((project) => {
@@ -48,22 +37,23 @@ export function getProjectStats() {
 		projectStats.push(stats);
 	});
 
-	return projectStats;
+	successFunction(projectStats);
 }
 
-export function getProjectById(id) {
-	let index = findProject(id);
+export function getProjectById(projectId, successFunction, errorFunction) {
+	let index = findProject(projectId);
 	if (index !== -1) {
 		let project = projectData[index];
 		project.stories = getStoriesByProjectId(project.id);
 
-		return project;
+		successFunction(project);
+		return;
 	}
 
-	return null;
+	errorFunction('Project with id ' + projectId + ' not found.');
 }
 
-export function createProject(project) {
+export function createProject(project, successFunction, errorFunction) {
 	let localProject = {};
 	localProject.id = nextId();
 	localProject.name = project.name;
@@ -71,10 +61,10 @@ export function createProject(project) {
 
 	projectData.push(localProject);
 
-	return localProject;
+	successFunction(localProject);
 }
 
-export function updateProject(project) {
+export function updateProject(project, successFunction, errorFunction) {
 	let index = findProject(project.id);
 	if (index !== -1) {
 		let localProject = {};
@@ -84,15 +74,21 @@ export function updateProject(project) {
 
 		projectData[index] = localProject;
 
-		return localProject;
+		successFunction(localProject);
+		return;
 	}
 
-	return null;
+	errorFunction('Project with id ' + project.id + ' not found.');
 }
 
-export function deleteProject(projectId) {
+export function deleteProject(projectId, successFunction, errorFunction) {
 	let index = findProject(projectId);
 	if (index !== -1) {
 		projectData.splice(index, 1);
+
+		successFunction('success');
+		return;
 	}
+
+	errorFunction('Project with id ' + projectId + ' not found.');
 }

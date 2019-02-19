@@ -1,12 +1,9 @@
-import { getTasksByStoryId } from './taskApi';
+import { getTasksByStoryId } from './taskApiDemo';
 
-var storyData = [
-	{ id: 1, projectId: 1, name: "Story"},
-	{ id: 2, projectId: 1, name: "Story 2"}
-];
+var storyData = [];
 
 function nextId() {
-	return storyData ? (storyData.sort((a, b) => a.id - b.id))[storyData.length - 1].id + 1 : 0;
+	return storyData.length > 0 ? (storyData.sort((a, b) => a.id - b.id))[storyData.length - 1].id + 1 : 0;
 }
 
 function findStory(storyId) {
@@ -20,8 +17,7 @@ export function getStoriesByProjectId(projectId) {
 	return stories;
 }
 
-
-export function createOrUpdateStory(story) {
+export function createOrUpdateStory(story, successFunction, errorFunction) {
 	let localStory = {};
 	localStory.id = story.id;
 	localStory.projectId = story.projectId;
@@ -34,20 +30,22 @@ export function createOrUpdateStory(story) {
 
 		storyData.push(localStory);
 
-		return localStory;
+		successFunction(localStory);
+		return;
 	}
 
 	let index = findStory(localStory.id);
 	if (localStory !== -1) {
 		storyData[localStory] = localStory;
 
-		return localStory;
+		successFunction(localStory);
+		return;
 	}
 
-	return null;
+	errorFunction('Story with id ' + localStory.id + ' not found.');
 }
 
-export function deleteStory(storyId) {
+export function deleteStory(storyId, successFunction, errorFunction) {
 	if (storyId === -1) {
 		return;
 	}
@@ -55,5 +53,9 @@ export function deleteStory(storyId) {
 	let index = findStory(storyId);
 	if (index !== -1) {
 		delete storyData[index];
+		successFunction('success');
+		return;
 	}
+
+	errorFunction('Story with id ' + storyId + ' not found.');
 }

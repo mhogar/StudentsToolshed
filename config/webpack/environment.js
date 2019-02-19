@@ -7,14 +7,16 @@ environment.config.merge(customConfig)
 
 environment.loaders.append('vue', {
 	test: /\.vue$/,
-	loader: 'vue-loader'
+	use: [
+		'vue-loader'
+	]
 });
 
 environment.loaders.append('css', {
 	test: /\.css$/,
     use: [
   		'vue-style-loader',
-      	'css-loader'
+      	'css-loader',
     ]
 });
 

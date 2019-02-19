@@ -28,14 +28,14 @@
 					</div>
 				</div>
 				<div class="one wide column">
-					<EditMenu 
+					<EditMenu v-if="state !== 'create'"
 						v-bind:editFunc="edit" 
 						v-bind:deleteFunc="destroy" 
 						v-bind:options="{ confirmDelete: deleteConfirmLevel, confirmDeleteMessage: deleteConfirmMessage, menuPointDir: 'top right' }">
 					</EditMenu>
 				</div>
 			</div>
-			<div class="ui accordion task-list">
+			<div v-if="state !== 'create'" class="ui accordion task-list">
 				<div class="title active">
 					<i class="dropdown icon"></i> <span class="ui sub header">toggle task list</span>
 				</div>

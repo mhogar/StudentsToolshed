@@ -1,5 +1,7 @@
-import axios from 'axios'
+import axios from 'axios';
 import { convertStoryData } from './storyApi';
+
+const DemoApi = require('./projectApiDemo');
 
 export function convertProjectData(data) {
 	let newData =
@@ -16,7 +18,12 @@ export function convertProjectData(data) {
 }
 
 export function getProjectStats(successFunction, errorFunction) {
-	return axios.get('/task_tracker/project_stats.json')
+	if (config.demoMode) {
+		DemoApi.getProjectStats(successFunction, errorFunction);
+		return;
+	}
+
+	axios.get('/task_tracker/project_stats.json')
 		.then(function(response) {
 			let stats = [];
 			response.data.forEach(function(data) {
@@ -38,8 +45,13 @@ export function getProjectStats(successFunction, errorFunction) {
 		});
 }
 
-export function getProjectById(id, successFunction, errorFunction) {
-	return axios.get(`/task_tracker/projects/${id}.json`)
+export function getProjectById(projectId, successFunction, errorFunction) {
+	if (config.demoMode) {
+		DemoApi.getProjectById(projectId, successFunction, errorFunction);
+		return;
+	}
+
+	axios.get(`/task_tracker/projects/${projectId}.json`)
 		.then(function(response) {
 			successFunction(convertProjectData(response.data));
 		})
@@ -49,12 +61,17 @@ export function getProjectById(id, successFunction, errorFunction) {
 }
 
 export function createProject(project, successFunction, errorFunction) {
+	if (config.demoMode) {
+		DemoApi.createProject(project, successFunction, errorFunction);
+		return;
+	}
+
 	let localProject = {
     	name: project.name,
     	description: project.description
 	};
 
-	return axios.post('/task_tracker/projects.json', localProject)
+	axios.post('/task_tracker/projects.json', localProject)
 		.then(function(response) {
 			successFunction(convertProjectData(response.data));
 		})
@@ -64,13 +81,18 @@ export function createProject(project, successFunction, errorFunction) {
 }
 
 export function updateProject(project, successFunction, errorFunction) {
+	if (config.demoMode) {
+		DemoApi.updateProject(project, successFunction, errorFunction);
+		return;
+	}
+
 	var projectId = project.id;
 	var localProject = {
     	name: project.name,
     	description: project.description
 	};
 
-	return axios.put(`/task_tracker/projects/${projectId}.json`, localProject)
+	axios.put(`/task_tracker/projects/${projectId}.json`, localProject)
 		.then(function(response) {
 			successFunction(convertProjectData(response.data));
 		})
@@ -80,7 +102,12 @@ export function updateProject(project, successFunction, errorFunction) {
 }
 
 export function deleteProject(projectId, successFunction, errorFunction) {
-	return axios.delete(`/task_tracker/projects/${projectId}.json`)
+	if (config.demoMode) {
+		DemoApi.deleteProject(projectId, successFunction, errorFunction);
+		return;
+	}
+
+	axios.delete(`/task_tracker/projects/${projectId}.json`)
 		.then(function(response) {
 			successFunction('success');
 		})

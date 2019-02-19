@@ -1,13 +1,7 @@
-var taskData = [
-	{ id: 1, storyId: 1, name: "Task 1", completed: false },
-	{ id: 2, storyId: 1, name: "Another Task", completed: true },
-	{ id: 3, storyId: 2, name: "One More Task", completed: false }
-];
-
-var changeBuffer = {};
+var taskData = [];
 
 function nextId() {
-	return taskData ? (taskData.sort((a, b) => a.id - b.id))[taskData.length - 1].id + 1 : 0;
+	return taskData.length > 0 ? (taskData.sort((a, b) => a.id - b.id))[taskData.length - 1].id + 1 : 0;
 }
 
 function findTask(taskId) {
@@ -18,7 +12,7 @@ export function getTasksByStoryId(storyId) {
 	return taskData.filter(task => task.storyId === storyId);
 }
 
-export function createOrUpdateTask(task) {
+export function createOrUpdateTask(task, successFunction, errorFunction) {
 	let localTask = {};
 	localTask.id = task.id;
 	localTask.storyId = task.storyId;
@@ -31,22 +25,22 @@ export function createOrUpdateTask(task) {
 		localTask.isNew = true;
 		taskData.push(localTask);
 
-		return localTask;
+		successFunction(localTask);
+		return;
 	}
 
 	let index = findTask(localTask.id);
 	if (index !== -1) {
-		
-
 		taskData[index] = localTask;
 
-		return localTask;
+		successFunction(localTask);
+		return;
 	}
 
-	return null;
+	errorFunction('Task with id ' + localTask.id + ' not found.');
 }
 
-export function deleteTask(taskId) {
+export function deleteTask(taskId, successFunction, errorFunction) {
 	if (taskId === -1){
 		return;
 	}
@@ -54,5 +48,9 @@ export function deleteTask(taskId) {
 	let index = findTask(taskId);
 	if (index !== -1) {
 		delete taskData[index];
+		successFunction('success');
+		return;
 	}
+
+	errorFunction('Task with id ' + taskId + ' not found.');
 }

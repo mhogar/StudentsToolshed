@@ -42,7 +42,9 @@
 				this.selectedProject = null;
 				window.scrollTo(0, 0);
 
-				this.loadProjects();
+				if (!this.projectLoading) {
+					this.loadProjects();
+				}
 			},
 			loadProjects: function() {
 				this.loading = true;

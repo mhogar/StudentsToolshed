@@ -29,7 +29,7 @@
 				});
 			},
 			validateInput: function() {
-				if (!validations.required && field === '') {
+				if (!this.validations.required && this.model.name === '') {
 					return true;
 				}
 
@@ -61,8 +61,6 @@
 		},
 		mounted: function() {
 			document.getElementById(this.inputId).focus();
-
-			console.log(this.validations);
 		}
 	};
 </script>

@@ -1,25 +1,31 @@
 <script type="text/javascript">
-	var projectConfig = {
+	const config = {
+		demoMode: <%= @demoMode %>
+	};
+
+	const projectConfig = {
 		minNameLength: <%= TaskTracker::Project::NAME_MIN_LENGTH %>,
 		maxNameLength: <%= TaskTracker::Project::NAME_MAX_LENGTH %>,
 		minDescLength: <%= TaskTracker::Project::DESC_MIN_LENGTH %>,
 		maxDescLength: <%= TaskTracker::Project::DESC_MAX_LENGTH %>
 	};
 
-	var storyConfig = {
+	const storyConfig = {
 		minNameLength: <%= TaskTracker::Story::NAME_MIN_LENGTH %>,
 		maxNameLength: <%= TaskTracker::Story::NAME_MAX_LENGTH %>
 	};
 
-	var taskConfig = {
+	const taskConfig = {
 		minNameLength: <%= TaskTracker::Task::NAME_MIN_LENGTH %>,
 		maxNameLength: <%= TaskTracker::Task::NAME_MAX_LENGTH %>
 	};
 </script>
 
-<% if user_signed_in? %>
-	<%= javascript_pack_tag 'task_tracker' %>
-	<div id="app"></div>
-<% else %>
-	<h1 class="ui center aligned header">You must be signed in to use this app.</h1>
+<% if @demoMode %>
+	<h4 class="ui center aligned header">You are not signed in. In "Demo" mode, the app will still function but your data will not be saved once you leave the page.</h4>
+	<br />
+	<br />
 <% end %>
+
+<%= javascript_pack_tag 'task_tracker' %>
+<div id="app"></div>
