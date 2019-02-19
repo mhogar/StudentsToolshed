@@ -6,14 +6,16 @@
 			</div>
 			<div class="ui grid">
 				<div class="left floated eleven wide column">
-					<div v-if="state === ''">
-						<i class="tasks icon"></i> <span class="ui header">{{story.name}}</span>
-					</div>
-					<EditForm v-if="state !== ''"
+					<h3 v-if="state === ''" class="ui header">
+						<i class="tasks icon"></i> 
+						<div class="content">{{story.name}}</div>
+					</h3>
+					<EditForm v-else
 						v-bind:saveFunc="function(event) { state !== '' && update(event) }"
 						v-bind:discardFunc="function(event) {state === 'create' ? discardCreate(event) : state = ''}"
 						v-bind:model="editStory"
-						v-bind:id_name="'story-name-input-'">
+						v-bind:id_name="'story-name-input-'"
+						v-bind:validations="{ required: true, minLength: 5, maxLength: 100 }">
 					</EditForm>
 				</div>
 				<div class="right floated four wide column">
@@ -26,7 +28,11 @@
 					</div>
 				</div>
 				<div class="one wide column">
-					<EditMenu v-bind:editFunc="edit" v-bind:deleteFunc="destroy" v-bind:confirmDelete="deleteConfirmLevel" v-bind:confirmDeleteMessage="deleteConfirmMessage"></EditMenu>
+					<EditMenu 
+						v-bind:editFunc="edit" 
+						v-bind:deleteFunc="destroy" 
+						v-bind:options="{ confirmDelete: deleteConfirmLevel, confirmDeleteMessage: deleteConfirmMessage, menuPointDir: 'top right' }">
+					</EditMenu>
 				</div>
 			</div>
 			<div class="ui accordion task-list">

@@ -9,11 +9,12 @@
 					<div v-if="state === ''">
 						<i class="thumbtack icon"></i> {{task.name}}
 					</div>
-					<EditForm v-if="state !== ''"
+					<EditForm v-else
 						v-bind:saveFunc="function(event) { state !== '' && update(event) }"
 						v-bind:discardFunc="function(event) {state === 'create' ? discardCreate(event) : state = ''}"
 						v-bind:model="editTask"
-						v-bind:id_name="'task-name-input-'">
+						v-bind:id_name="'task-name-input-'"
+						v-bind:validations="{ required: true, minLength: 5, maxLength: 100 }">
 					</EditForm>
 				</div>
 				<div class="left floated two wide column">
@@ -23,7 +24,11 @@
 					</div>
 				</div>
 				<div class="left floated one wide column">
-					<EditMenu v-bind:editFunc="edit" v-bind:deleteFunc="destroy"></EditMenu>
+					<EditMenu 
+						v-bind:editFunc="edit" 
+						v-bind:deleteFunc="destroy" 
+						v-bind:options="{ menuPointDir: 'top left' }">
+					</EditMenu>
 				</div>
 			</div>
 		</div>

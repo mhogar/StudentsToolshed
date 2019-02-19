@@ -13,20 +13,11 @@
 					    	<div class="sub header">{{project.description}}</div>
 					  	</div>
 					</h2>
-					<form class="ui form" v-on:submit.prevent="update($event)" v-else>
-						<div class="fields">
-							<div class="four wide field">
-								<label>Name</label>
-								<input id="project-name-input" type="text" name="name" required="true" placeholder="Name (required)" v-model="editProject.name" />
-							</div>
-							<div class="ten wide field">
-								<label>Description</label>
-								<input id="project-description-input" type="text" name="description" placeholder="Add a description" v-model="editProject.description" />
-							</div>
-						</div>
-						<button class="ui button blue" type="submit">Save</button>
-						<button class="ui button" v-on:click="state = ''">Discard</button>
-				  	</form>
+					<ProjectEditForm v-else
+						v-bind:saveFunc="function(event) { update(event) }"
+						v-bind:discardFunc="function(event) {state = ''}"
+						v-bind:model="editProject">
+					</ProjectEditForm>
 				</div>
 				<div class="right floated three wide column">
 					<button class="ui labeled icon purple button" v-on:click="createStory($event)">
@@ -35,7 +26,11 @@
 					</button>
 				</div>
 				<div class="one wide column">
-					<EditMenu v-bind:editFunc="edit" v-bind:deleteFunc="destroy" v-bind:confirmDelete="deleteConfirmLevel" v-bind:confirmDeleteMessage="deleteConfirmMessage"></EditMenu>
+					<EditMenu 
+						v-bind:editFunc="edit" 
+						v-bind:deleteFunc="destroy" 
+						v-bind:options="{ confirmDelete: deleteConfirmLevel, confirmDeleteMessage: deleteConfirmMessage, menuPointDir: 'top right' }">
+					</EditMenu>
 				</div>
 			</div>
 			<h2 class="ui center aligned header" id="no-stories-message" v-if="!project.stories.length">
@@ -68,12 +63,14 @@
 
 	import storyComponent from './story.vue';
 	import editMenuComponent from './editMenu.vue';
+	import projectEditFormComponent from './projectEditForm.vue';
 
 	export default {
 		props: ['projectId'],
 		components: {
 			'Story': storyComponent,
-			'EditMenu': editMenuComponent
+			'EditMenu': editMenuComponent,
+			'ProjectEditForm': projectEditFormComponent
 		},
 		data: function() {
 			return {
