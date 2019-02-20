@@ -10,6 +10,14 @@ function findStory(storyId) {
 	return storyData.findIndex(item => item.id === storyId);
 }
 
+function createLocalStory(story) {
+	return {
+		id: story.id,
+		projectId: story.projectId,
+		name: story.name
+	};
+}
+
 export function getStoriesByProjectId(projectId) {
 	let stories = storyData.filter(story => story.projectId === projectId);
 	stories.forEach((story) => story.tasks = getTasksByStoryId(story.id));
@@ -18,27 +26,23 @@ export function getStoriesByProjectId(projectId) {
 }
 
 export function createOrUpdateStory(story, successFunction, errorFunction) {
-	let localStory = {};
-	localStory.id = story.id;
-	localStory.projectId = story.projectId;
-	localStory.name = story.name;
-	localStory.description = story.description;
-
+	let localStory = createLocalStory(story);
+	
 	//create
 	if (localStory.id === -1) {
 		localStory.id = nextId();
 
 		storyData.push(localStory);
 
-		successFunction(localStory);
+		successFunction(createLocalStory(localStory));
 		return;
 	}
 
 	let index = findStory(localStory.id);
-	if (localStory !== -1) {
-		storyData[localStory] = localStory;
+	if (index !== -1) {
+		storyData[index] = localStory;
 
-		successFunction(localStory);
+		successFunction(createLocalStory(localStory));
 		return;
 	}
 

@@ -8,24 +8,28 @@ function findTask(taskId) {
 	return taskData.findIndex(item => item.id === taskId);
 }
 
+function createLocalTask(task) {
+	return {
+		id: task.id,
+		storyId: task.storyId,
+		name: task.name,
+		completed: task.completed
+	};
+}
+
 export function getTasksByStoryId(storyId) {
 	return taskData.filter(task => task.storyId === storyId);
 }
 
 export function createOrUpdateTask(task, successFunction, errorFunction) {
-	let localTask = {};
-	localTask.id = task.id;
-	localTask.storyId = task.storyId;
-	localTask.name = task.name;
-	localTask.completed = task.completed;
+	let localTask = createLocalTask(task);
 	
 	//create
 	if (localTask.id === -1) {
 		localTask.id = nextId();
-		localTask.isNew = true;
 		taskData.push(localTask);
 
-		successFunction(localTask);
+		successFunction(createLocalTask(localTask));
 		return;
 	}
 
@@ -33,7 +37,7 @@ export function createOrUpdateTask(task, successFunction, errorFunction) {
 	if (index !== -1) {
 		taskData[index] = localTask;
 
-		successFunction(localTask);
+		successFunction(createLocalTask(localTask));
 		return;
 	}
 

@@ -10,6 +10,14 @@ function findProject(projectId) {
 	return projectData.findIndex(item => item.id === projectId);
 }
 
+function createLocalProject(project) {
+	return {
+		id: project.id,
+		name: project.name,
+		description: project.description
+	};
+}
+
 export function getProjectStats(successFunction, errorFunction) {
 	let projectStats = [];
 
@@ -43,10 +51,10 @@ export function getProjectStats(successFunction, errorFunction) {
 export function getProjectById(projectId, successFunction, errorFunction) {
 	let index = findProject(projectId);
 	if (index !== -1) {
-		let project = projectData[index];
-		project.stories = getStoriesByProjectId(project.id);
+		let localProject = createLocalProject(projectData[index]);
+		localProject.stories = getStoriesByProjectId(localProject.id);
 
-		successFunction(project);
+		successFunction(localProject);
 		return;
 	}
 
@@ -54,27 +62,23 @@ export function getProjectById(projectId, successFunction, errorFunction) {
 }
 
 export function createProject(project, successFunction, errorFunction) {
-	let localProject = {};
-	localProject.id = nextId();
-	localProject.name = project.name;
-	localProject.description = project.description;
+	let localProject = createLocalProject({
+		id: nextId(),
+		name: project.name,
+		description: project.description
+	});
 
 	projectData.push(localProject);
-
-	successFunction(localProject);
+	successFunction(createLocalProject(localProject));
 }
 
 export function updateProject(project, successFunction, errorFunction) {
 	let index = findProject(project.id);
 	if (index !== -1) {
-		let localProject = {};
-		localProject.id = project.id;
-		localProject.name = project.name;
-		localProject.description = project.description;
-
+		let localProject = createLocalProject(project);
 		projectData[index] = localProject;
 
-		successFunction(localProject);
+		successFunction(createLocalProject(localProject));
 		return;
 	}
 
