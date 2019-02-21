@@ -7,7 +7,7 @@
 					  	<i v-bind:class="'icon ' + (project.percent === 100 ? 'check circle green' : 'yellow thumbtack')"></i>
 					  	<div class="content">
 					    	{{project.name}}
-					    	<div class="sub header">{{project.description}}</div>
+					    	<div class="sub header">{{project.description !== '' ? project.description : 'No description'}}</div>
 					  	</div>
 					</div>
 				</div>
@@ -19,9 +19,15 @@
 			</div>
 		</div>
 		<div class="content">
-			<div class="ui horizontal list">
-				<div class="item">Stories: <b>{{project.numStories}}</b></div>
-				<div class="item">Tasks: <b>{{project.numTasks}}</b></div>
+			<div class="ui list">
+				<div class="item">
+					<div class="ui horizontal list">
+						<div class="item"><strong>Stories:</strong> {{project.numStories}}</div>
+						<div class="item"><strong>Tasks:</strong> {{project.numTasks}}</div>
+					</div>
+				</div>
+				<div v-if="project.createdDate" class="item"><strong>Created:</strong> {{createDateTimeString(project.createdDate)}}</div>
+				<div v-if="project.updatedDate" class="item"><strong>Updated:</strong> {{createDateTimeString(project.updatedDate)}}</div>
 			</div>
 		</div>
 		<div class="extra content">
@@ -52,6 +58,9 @@
 			},
 			discardCreate: function(event) {
 				this.$parent.deleteFromProjects(this.project.id)
+			},
+			createDateTimeString: function(dateTime) {
+				return dateTime.toDateString() + ' at ' + dateTime.toLocaleTimeString();
 			}
 		},
 		mounted: function() {

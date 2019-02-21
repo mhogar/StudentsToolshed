@@ -35,6 +35,7 @@ class TaskTracker::TasksController < ApplicationController
   # DELETE /tasks/1
   # DELETE /tasks/1.json
   def destroy
+    @task.story.touch #update the story's timestamps since its hierarchy has been modified
     @task.destroy
   end
 

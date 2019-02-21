@@ -79,6 +79,12 @@ class TaskTracker::TasksControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :no_content
+
+    #test parent story's updated_at was changed
+    story = task_tracker_stories(:one)
+    get "/task_tracker/stories/#{story.id}", as: :json
+    assert_not_nil(JSON.parse(@response.body)['updated_at'])
+    assert_not_equal(story.updated_at, JSON.parse(@response.body)['updated_at'])
   end
 
   test "destroy task with wrong user" do

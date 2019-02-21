@@ -34,7 +34,9 @@ export function getProjectStats(successFunction, errorFunction) {
 					description: data.description,
 					numStories: data.num_stories,
 					numTasks: data.num_tasks,
-					percent: data.percent
+					percent: data.percent,
+					createdDate: new Date(data.created_date),
+					updatedDate: new Date(data.updated_date)
 				});
 			});
 

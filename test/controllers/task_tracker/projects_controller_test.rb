@@ -23,7 +23,9 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
       'description' => project.description,
       'num_stories' => 2,
       'num_tasks' => 2,
-      'percent' => 50
+      'percent' => 50,
+      'created_date' => project.created_at,
+      'updated_date' => task_tracker_tasks(:one).updated_at
     }
     
     project = task_tracker_projects(:two)
@@ -33,7 +35,9 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
       'description' => project.description,
       'num_stories' => 0,
       'num_tasks' => 0,
-      'percent' => 0
+      'percent' => 0,
+      'created_date' => project.created_at,
+      'updated_date' => project.updated_at
     }
 
     response = JSON.parse(@response.body)
@@ -159,7 +163,7 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
     end
 
     def test_stats(expected, actual)
-      ['id', 'name', 'description', 'num_stories', 'num_tasks', 'percent'].each { |field| assert_equal(expected[field], actual[field], "stats #{field} did not match") }
+      ['id', 'name', 'description', 'num_stories', 'num_tasks', 'percent', 'created_date', 'updated_date'].each { |field| assert_equal(expected[field], actual[field], "stats #{field} did not match") }
     end
 
     def test_no_user

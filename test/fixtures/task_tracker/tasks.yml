@@ -3,9 +3,13 @@ one:
   story_id: 1
   name: New Task
   completed: false
+  created_at: 0001-01-01 00:00:00
+  updated_at: 0001-01-01 20:00:00
 
 two:
   id: 2
   story_id: 1
   name: Another Task
   completed: true
+  created_at: 0001-01-01 00:00:00
+  updated_at: 0001-01-01 00:00:00

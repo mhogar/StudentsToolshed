@@ -7,26 +7,34 @@ class TaskTracker::ProjectsController < ApplicationController
   def stats
     @project_stats = []
 
-    @user.task_tracker_interface.projects.order('id').each do |project|
+    @user.task_tracker_interface.projects.each do |project|
       stats = {}
 
       stats[:id] = project.id
       stats[:name] = project.name
       stats[:description] = project.description
+      stats[:created_date] = project.created_at
 
-      story_ids = project.stories.select('id')
-      stats[:num_stories] = story_ids.count
+      stories = project.stories.select(:id, :updated_at).order(updated_at: :desc)
+      stats[:num_stories] = stories.length
 
-      tasks = @user.task_tracker_interface.tasks.select('completed').where(story_id: story_ids)
-      stats[:num_tasks] = tasks.count
+      tasks = @user.task_tracker_interface.tasks.select(:completed, :updated_at).where(story_id: stories.ids).order(updated_at: :desc)
+      stats[:num_tasks] = tasks.length
       stats[:percent] = tasks.select { |task| task.completed == true }.count
 
       if stats[:percent] > 0
         stats[:percent] = (stats[:percent].to_f / stats[:num_tasks]).round(2) * 100
       end
 
+      lastStoryUpdate = stories.length > 0 ? stories[0].updated_at : Time.zone.parse('0001-01-01 00:00:00')
+      lastTaskUpdate = tasks.length > 0 ? tasks[0].updated_at : Time.zone.parse('0001-01-01 00:00:00')
+      stats[:updated_date] = [project.updated_at, lastStoryUpdate, lastTaskUpdate].max
+
       @project_stats.append(stats)
     end
+
+    #sort by last updated desc
+    @project_stats.sort! { |a, b| b[:updated_date] <=> a[:updated_date] }
   end
 
   # GET /task_tracker/projects/1

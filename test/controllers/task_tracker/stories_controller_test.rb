@@ -85,6 +85,12 @@ class TaskTracker::StoriesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :no_content
+
+    #test parent project's updated_at was changed
+    project = task_tracker_projects(:one)
+    get "/task_tracker/projects/#{project.id}", as: :json
+    assert_not_nil(JSON.parse(@response.body)['updated_at'])
+    assert_not_equal(project.updated_at, JSON.parse(@response.body)['updated_at'])
   end
 
   test "destroy story with wrong user" do
