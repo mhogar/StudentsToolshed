@@ -9,6 +9,5 @@ class CreateTaskTrackerTasks < ActiveRecord::Migration[5.2]
     end
 
     add_foreign_key :task_tracker_tasks, :task_tracker_stories, column: :story_id
-    add_foreign_key :task_tracker_tasks, :task_tracker_projects, column: :project_id
   end
 end
