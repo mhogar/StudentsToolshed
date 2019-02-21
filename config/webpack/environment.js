@@ -1,9 +1,14 @@
 const { environment } = require('@rails/webpacker')
 const webpack = require('webpack')
-const customConfig = require('./custom')
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-environment.config.merge(customConfig)
+environment.config.merge({
+  	resolve: {
+    	alias: {
+      		vue: 'vue/dist/vue.js'
+    	}
+  	}
+});
 
 environment.loaders.append('vue', {
 	test: /\.vue$/,
