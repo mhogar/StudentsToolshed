@@ -17,6 +17,7 @@ As of the current release there is only one app, however more are planned. Look 
 * rails 5.2.2
 * ruby 2.6.1
 * bundler 2.0.1
+* node.js >= 8
 * yarn
 
 ### Setting up the app locally
