@@ -3,6 +3,7 @@ one:
   story_id: 1
   name: New Task
   completed: false
+  time_estimate: 5
   created_at: 0001-01-01 00:00:00
   updated_at: 0001-01-01 20:00:00
 
@@ -11,5 +12,6 @@ two:
   story_id: 1
   name: Another Task
   completed: true
+  time_estimate: 10
   created_at: 0001-01-01 00:00:00
   updated_at: 0001-01-01 00:00:00

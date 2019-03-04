@@ -4,7 +4,7 @@
 			<div class="ui grid">
 				<div class="twelve wide column">
 					<div class="ui header">
-					  	<i v-bind:class="'icon ' + (project.percent === 100 ? 'check circle green' : 'yellow thumbtack')"></i>
+					  	<i v-bind:class="'icon ' + (completionPercent === 100 ? 'check circle green' : 'yellow thumbtack')"></i>
 					  	<div class="content">
 					    	{{project.name}}
 					    	<div class="sub header">{{project.description !== '' ? project.description : 'No description'}}</div>
@@ -33,7 +33,7 @@
 		<div class="extra content">
 			<div class="ui middle aligned list">
 				<div class="item">
-					Completion: {{project.percent}}%
+					Completion: {{completionPercent}}%
 					<div class="right floated content">{{project.completedTimeEstimate}}/{{project.totalTimeEstiamte}} h</div>
 				</div>
 			</div>
@@ -53,12 +53,15 @@
 			},
 			isEmpty: function() {
 				return this.project.numStories == 0 && this.project.numTasks == 0
+			},
+			completionPercent: function() {
+				return Math.round(this.project.completedTimeEstimate / this.project.totalTimeEstiamte * 100);
 			}
 		},
 		methods: {
 			updateProgressBar: function() {
 				$('#' + this.progressBarId).progress({
-					percent: this.project.percent
+					percent: this.completionPercent
 				});
 			},
 			discardCreate: function(event) {

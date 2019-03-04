@@ -10,7 +10,7 @@
 						<i class="tasks icon"></i> 
 						<div class="content">{{story.name}}</div>
 					</h3>
-					<form v-else class="ui form" v-on:submit.prevent="">
+					<form v-else class="ui form" v-on:submit.prevent>
 						<div class="ui input fluid action">
 							<input type="text" name="name" v-model="editStory.name" v-bind:id="nameInputId" />
 							<button class="ui button blue" v-on:click="onSave($event)">Save</button>
@@ -72,6 +72,8 @@
 </style>
 
 <script>
+	/*global storyConfig*/
+
 	const Api = require('../api/storyApi');
 
 	import editMenuComponent from './editMenu.vue';
@@ -90,6 +92,7 @@
 			return {
 				loading: false,
 				state: this.story.name === '' ? 'create' : '',
+				editEntered: false,
 				editStory: this.story,
 				percent: 0
 			};
@@ -98,7 +101,7 @@
 			nameInputId: function() {
 				return 'story-name-input-' + this.story.id;
 			},
-			validateName: function() {
+			nameValid: function() {
 				let id = this.nameInputId;
 				let field = this.editStory.name;
 
@@ -139,8 +142,19 @@
 			}
 		},
 		methods: {
+			focusInput: function(id) {
+				let el = document.getElementById(id);
+				
+				if (el) {
+					el.focus();
+					el.select();
+				}
+			},
 			onSave: function(event) {
-				if (this.validateName) {
+				if (!this.nameValid) {
+					this.focusInput(this.nameInputId);
+				}
+				else {
 					this.update(event);
 				}
 			},
@@ -153,6 +167,7 @@
 			},
 			edit: function(event) {
 				this.state = 'edit';
+				this.editEntered = true;
 
 				this.editStory = {
 					id: this.story.id,
@@ -196,7 +211,7 @@
 					storyId: this.story.id,
 					name: '',
 					completed: false,
-					timeEstimate: 0
+					timeEstimate: ''
 				};
 
 				this.addToTasks(task);
@@ -223,6 +238,14 @@
 		mounted: function() {
 			this.updateProgressBar();
 			$('.ui.accordion.task-list').accordion();
-		}
+			
+			this.focusInput(this.nameInputId);
+		},
+		updated: function() {
+			if (this.editEntered) {
+      	this.focusInput(this.nameInputId);
+      	this.editEntered = false;
+			}
+    }
 	};
 </script>

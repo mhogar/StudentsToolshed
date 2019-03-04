@@ -27,10 +27,10 @@
 					</EditMenu>
 				</div>
 			</div>
-			<form v-else class="ui form" v-on:submit.prevent="">
+			<form v-else class="ui form" v-on:submit.prevent>
 				<div class="fields">
 					<div class="twelve wide field">
-				        <input type="text" name="name" v-model="editTask.name" v-bind:id="nameInputId" />
+						<input type="text" name="name" v-model="editTask.name" v-bind:id="nameInputId" ss/>
 					</div>
 					<div class="one wide field">
 						<input type="text" name="timeEstimate" v-model="editTask.timeEstimate" v-bind:id="timeEstimateInputId" />
@@ -58,6 +58,8 @@
 </style>
 
 <script>
+	/*global taskConfig*/
+
 	const Api = require('../api/taskApi');
 
 	import editMenuComponent from './editMenu.vue';
@@ -73,6 +75,7 @@
 			return {
 				loading: false,
 				state: this.task.name === '' ? 'create' : '',
+				editEntered: false,
 				editTask: {
 					id: this.task.id,
 					name: this.task.name,
@@ -87,13 +90,13 @@
 			timeEstimateInputId: function() {
 				return 'task-time-estimate-input-' + this.task.id;
 			},
-			validateName: function() {
+			nameValid: function() {
 				let id = this.nameInputId;
 				let field = this.editTask.name;
 
 				return this.validateRequired(id, field) && this.validateString(id, field, taskConfig.minNameLength, taskConfig.maxNameLength);
 			},
-			validateTimeEstimate: function() {
+			timeEstimateValid: function() {
 				let id = this.timeEstimateInputId;
 				let field = this.editTask.timeEstimate;
 
@@ -101,8 +104,22 @@
 			}
 		},
 		methods: {
+			focusInput: function(id) {
+				let el = document.getElementById(id);
+				
+				if (el) {
+					el.focus();
+					el.select();
+				}
+			},
 			onSave: function(event) {
-				if (this.validateName && this.validateTimeEstimate) {
+				if (!this.nameValid) {
+					this.focusInput(this.nameInputId);
+				}
+				else if (!this.timeEstimateValid) {
+					this.focusInput(this.timeEstimateInputId);
+				}
+				else {
 					this.update(event);
 				}
 			},
@@ -136,6 +153,7 @@
 				}
 
 				this.state = 'edit';
+				this.editEntered = true;
 
 				this.editTask = {
 					id: this.task.id,
@@ -147,7 +165,8 @@
 				this.state = '';
 
 				this.task.name = this.editTask.name;
-				this.task.timeEstimate = parseInt(this.editTask.timeEstimate);
+				this.task.timeEstimate = parseInt(this.editTask.timeEstimate, 10);
+				this.$parent.updateProgressBar();
 
 				this.loading = true;
 				Api.createOrUpdateTask(
@@ -175,6 +194,15 @@
 					}
 				);
 			}
-		}
+		},
+		updated: function() {
+			if (this.editEntered) {
+      	this.focusInput(this.nameInputId);
+      	this.editEntered = false;
+			}
+    },
+    mounted: function() {
+    	this.focusInput(this.nameInputId);
+    }
 	};
 </script>

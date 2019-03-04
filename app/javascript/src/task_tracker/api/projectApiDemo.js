@@ -49,11 +49,6 @@ export function getProjectStats(successFunction, errorFunction) {
 			});
 		});
 
-		stats.percent = 0;
-		if (stats.totalTimeEstiamte > 0) {
-			stats.percent = Math.round(stats.completedTimeEstimate / stats.totalTimeEstiamte * 100);
-		}
-
 		projectStats.push(stats);
 	});
 

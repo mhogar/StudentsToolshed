@@ -2,7 +2,7 @@ class TaskTracker::Project < ApplicationRecord
 	self.table_name = "task_tracker_projects"
 
 	NAME_MIN_LENGTH = 1
-	NAME_MAX_LENGTH = 20
+	NAME_MAX_LENGTH = 35
 	DESC_MIN_LENGTH = 10
 	DESC_MAX_LENGTH = 100
 

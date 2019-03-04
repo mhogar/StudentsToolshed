@@ -13,7 +13,7 @@
 					    	<div class="sub header">{{project.description}}</div>
 					  	</div>
 					</h2>
-					<form v-else class="ui form" v-on:submit.prevent="">
+					<form v-else class="ui form" v-on:submit.prevent>
 						<div class="fields">
 							<div class="four wide field">
 								<label>Name</label>
@@ -68,6 +68,8 @@
 </style>
 
 <script>
+	/*global projectConfig*/
+	
 	const Api = require('../api/projectApi');
 
 	import storyComponent from './story.vue';
@@ -87,27 +89,25 @@
 				firstLoad: false,
 				loading: false,
 				state: '',
+				editEntered: false,
 				project: {},
 				editProject: {}
 			};
 		},
 		computed: {
-			config: function() {
-				return projectConfig;
-			},
 			nameInputId: function() {
 				return 'project-name-input-' + this.projectId;
 			},
 			descInputId: function() {
 				return 'project-desc-input-' + this.projectId;
 			},
-			validateName: function() {
+			nameValid: function() {
 				let id = this.nameInputId;
 				let field = this.editProject.name;
 
 				return this.validateRequired(id, field) && this.validateString(id, field, projectConfig.minNameLength, projectConfig.maxNameLength);
 			},
-			validateDesc: function() {
+			descValid: function() {
 				let id = this.descInputId;
 				let field = this.editProject.description;
 
@@ -135,8 +135,22 @@
 			}
 		},
 		methods: {
+			focusInput: function(id) {
+				let el = document.getElementById(id);
+				
+				if (el) {
+					el.focus();
+					el.select();
+				}
+			},
 			onSave: function(event) {
-				if (this.validateName && this.validateDesc) {
+				if (!this.nameValid){
+					this.focusInput(this.nameInputId);
+				}
+				else if (!this.descValid) {
+					this.focusInput(this.descInputId);
+				}
+				else {
 					this.update(event);
 				}
 			},
@@ -177,6 +191,7 @@
 			},
 			edit: function(event) {
 				this.state = 'edit';
+				this.editEntered = true;
 
 				this.editProject = {
 					id: this.project.id,
@@ -209,6 +224,12 @@
 		},
 		beforeMount: function() {
 			this.loadProject();
-		}
+		},
+		updated: function() {
+			if (this.editEntered) {
+      	this.focusInput(this.nameInputId);
+      	this.editEntered = false;
+			}
+    }
 	};
 </script>
