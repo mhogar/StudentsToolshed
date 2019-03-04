@@ -31,7 +31,12 @@
 			</div>
 		</div>
 		<div class="extra content">
-			Completion: {{project.percent}}%
+			<div class="ui middle aligned list">
+				<div class="item">
+					Completion: {{project.percent}}%
+					<div class="right floated content">{{project.completedTimeEstimate}}/{{project.totalTimeEstiamte}} h</div>
+				</div>
+			</div>
 		</div>
 		<div class="ui bottom attached indicating progress" v-bind:id="progressBarId">
 		    <div class="bar"></div>

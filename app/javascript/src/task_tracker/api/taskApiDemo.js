@@ -1,4 +1,12 @@
-var taskData = [];
+var taskData = [
+	{
+		id: 1,
+		name: 'Task Name',
+		completed: false,
+		timeEstimate: 2,
+		storyId: 1
+	}
+];
 
 function nextId() {
 	return taskData.length > 0 ? (taskData.sort((a, b) => a.id - b.id))[taskData.length - 1].id + 1 : 0;
@@ -13,7 +21,8 @@ function createLocalTask(task) {
 		id: task.id,
 		storyId: task.storyId,
 		name: task.name,
-		completed: task.completed
+		completed: task.completed,
+		timeEstimate: task.timeEstimate
 	};
 }
 

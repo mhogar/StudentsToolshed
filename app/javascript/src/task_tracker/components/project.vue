@@ -13,11 +13,20 @@
 					    	<div class="sub header">{{project.description}}</div>
 					  	</div>
 					</h2>
-					<ProjectEditForm v-else
-						v-bind:saveFunc="function(event) { update(event) }"
-						v-bind:discardFunc="function(event) {state = ''}"
-						v-bind:model="editProject">
-					</ProjectEditForm>
+					<form v-else class="ui form" v-on:submit.prevent="">
+						<div class="fields">
+							<div class="four wide field">
+								<label>Name</label>
+								<input v-bind:id="nameInputId" type="text" name="name" placeholder="Name (required)" v-model="editProject.name" />
+							</div>
+							<div class="ten wide field">
+								<label>Description</label>
+								<input v-bind:id="descInputId" type="text" name="description" placeholder="Add a description" v-model="editProject.description" />
+							</div>
+						</div>
+						<button class="ui button blue" v-on:click="onSave($event)">Save</button>
+						<button class="ui button" v-on:click="onDiscard($event)">Discard</button>
+				  	</form>
 				</div>
 				<div class="right floated three wide column">
 					<button class="ui labeled icon purple button" v-on:click="createStory($event)">
@@ -63,14 +72,15 @@
 
 	import storyComponent from './story.vue';
 	import editMenuComponent from './editMenu.vue';
-	import projectEditFormComponent from './projectEditForm.vue';
+
+	import {requiredValidator, stringValidator} from '../mixins/formValidator.js'
 
 	export default {
 		props: ['projectId'],
+		mixins: [requiredValidator, stringValidator],
 		components: {
 			'Story': storyComponent,
-			'EditMenu': editMenuComponent,
-			'ProjectEditForm': projectEditFormComponent
+			'EditMenu': editMenuComponent
 		},
 		data: function() {
 			return {
@@ -84,6 +94,28 @@
 		computed: {
 			config: function() {
 				return projectConfig;
+			},
+			nameInputId: function() {
+				return 'project-name-input-' + this.projectId;
+			},
+			descInputId: function() {
+				return 'project-desc-input-' + this.projectId;
+			},
+			validateName: function() {
+				let id = this.nameInputId;
+				let field = this.editProject.name;
+
+				return this.validateRequired(id, field) && this.validateString(id, field, projectConfig.minNameLength, projectConfig.maxNameLength);
+			},
+			validateDesc: function() {
+				let id = this.descInputId;
+				let field = this.editProject.description;
+
+				if (field === '') {
+					return true;
+				}
+
+				return this.validateString(id, field, projectConfig.minDescLength, projectConfig.maxDescLength);
 			},
 			numStories: function () {
 				let stories = this.project.stories;
@@ -103,6 +135,14 @@
 			}
 		},
 		methods: {
+			onSave: function(event) {
+				if (this.validateName && this.validateDesc) {
+					this.update(event);
+				}
+			},
+			onDiscard: function(event) {
+				this.state = '';
+			},
 			loadProject: function() {
 				this.loading = true;
 				Api.getProjectById(this.projectId, function(data) {

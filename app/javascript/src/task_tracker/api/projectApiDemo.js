@@ -1,6 +1,12 @@
 import { getStoriesByProjectId } from './storyApiDemo';
 
-var projectData = [];
+var projectData = [
+	{
+		id: 1,
+		name: 'Project Name',
+		description: ''
+	}
+];
 
 function nextId() {
 	return projectData.length > 0 ? (projectData.sort((a, b) => a.id - b.id))[projectData.length - 1].id + 1 : 0;
@@ -31,15 +37,21 @@ export function getProjectStats(successFunction, errorFunction) {
 		stats.numStories = stories.length;
 
 		stats.numTasks = 0;
-		stats.percent = 0;
+		stats.completedTimeEstimate = 0;
+		stats.totalTimeEstiamte = 0;
 
 		stories.forEach((story) => {
 			stats.numTasks += story.tasks.length;
-			stats.percent += story.tasks.filter((task) => task.completed === true).length;
+			
+			story.tasks.forEach(function(task) {
+				stats.totalTimeEstiamte += task.timeEstimate;
+				stats.completedTimeEstimate += (task.completed ? task.timeEstimate : 0);
+			});
 		});
 
-		if (stats.percent > 0) {
-			stats.percent = Math.round(stats.percent / stats.numTasks * 100);
+		stats.percent = 0;
+		if (stats.totalTimeEstiamte > 0) {
+			stats.percent = Math.round(stats.completedTimeEstimate / stats.totalTimeEstiamte * 100);
 		}
 
 		projectStats.push(stats);

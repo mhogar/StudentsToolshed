@@ -1,6 +1,12 @@
 import { getTasksByStoryId } from './taskApiDemo';
 
-var storyData = [];
+var storyData = [
+	{
+		id: 1,
+		name: 'Story Name',
+		projectId: 1
+	}
+];
 
 function nextId() {
 	return storyData.length > 0 ? (storyData.sort((a, b) => a.id - b.id))[storyData.length - 1].id + 1 : 0;
