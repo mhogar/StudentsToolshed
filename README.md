@@ -30,3 +30,6 @@ As of the current release there is only one app, however more are planned. Look 
 ### Running the tests
 * Each model has associated validation tests. Run them with `rails test test/models/*`
 * Each API endpoint has associated integration tests. Run them with `rails test test/controllers/*`
+
+# Release Notes
+* [Task Tracker](release_notes/task_tracker.md)
