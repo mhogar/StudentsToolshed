@@ -20,12 +20,12 @@ class TaskTracker::ProjectsController < ApplicationController
 
       tasks = @user.task_tracker_interface.tasks.select(:completed, :time_estimate, :updated_at).where(story_id: stories.ids).order(updated_at: :desc)
       stats[:num_tasks] = tasks.length
-      stats[:completed_time_estimate] = 0
+      stats[:remaining_time_estimate] = 0
 	  	stats[:total_time_estiamte] = 0
 	  	
 	  	tasks.each do |task|
 	  	  stats[:total_time_estiamte] += task.time_estimate
-				stats[:completed_time_estimate] += (task.completed ? task.time_estimate : 0)
+				stats[:remaining_time_estimate] += (!task.completed ? task.time_estimate : 0)
 	  	end
 
       lastStoryUpdate = stories.length > 0 ? stories[0].updated_at : Time.zone.parse('0001-01-01 00:00:00')

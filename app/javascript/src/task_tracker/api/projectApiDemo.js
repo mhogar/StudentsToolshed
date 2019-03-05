@@ -37,7 +37,7 @@ export function getProjectStats(successFunction, errorFunction) {
 		stats.numStories = stories.length;
 
 		stats.numTasks = 0;
-		stats.completedTimeEstimate = 0;
+		stats.remainingTimeEstimate = 0;
 		stats.totalTimeEstiamte = 0;
 
 		stories.forEach((story) => {
@@ -45,7 +45,7 @@ export function getProjectStats(successFunction, errorFunction) {
 			
 			story.tasks.forEach(function(task) {
 				stats.totalTimeEstiamte += task.timeEstimate;
-				stats.completedTimeEstimate += (task.completed ? task.timeEstimate : 0);
+				stats.remainingTimeEstimate += (!task.completed ? task.timeEstimate : 0);
 			});
 		});
 

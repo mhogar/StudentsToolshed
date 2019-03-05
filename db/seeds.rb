@@ -6,9 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-user = User.create(
+User.create(
 	email: 'user1@example.com', 
 	password: 'password', 
 	password_confirmation: 'password'
 )
-user.task_tracker_interface = TaskTrackerInterface.create()

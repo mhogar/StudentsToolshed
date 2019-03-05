@@ -24,7 +24,7 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
       'num_stories' => 2,
       'num_tasks' => 2,
       'total_time_estiamte' => 15, 
-      'completed_time_estimate' => 10,
+      'remaining_time_estimate' => 5,
       'created_date' => project.created_at,
       'updated_date' => task_tracker_tasks(:one).updated_at
     }
@@ -37,7 +37,7 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
       'num_stories' => 0,
       'num_tasks' => 0,
       'total_time_estiamte' => 0, 
-      'completed_time_estimate' => 0,
+      'remaining_time_estimate' => 0,
       'created_date' => project.created_at,
       'updated_date' => project.updated_at
     }
@@ -163,7 +163,7 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
     end
 
     def test_stats(expected, actual)
-      ['id', 'name', 'description', 'num_stories', 'num_tasks', 'total_time_estiamte', 'completed_time_estimate', 'created_date', 'updated_date'].each { |field| assert_equal(expected[field], actual[field], "stats #{field} did not match") }
+      ['id', 'name', 'description', 'num_stories', 'num_tasks', 'total_time_estiamte', 'remaining_time_estimate', 'created_date', 'updated_date'].each { |field| assert_equal(expected[field], actual[field], "stats #{field} did not match") }
     end
 
     def test_no_user

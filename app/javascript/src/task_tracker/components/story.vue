@@ -21,7 +21,7 @@
 				<div class="right floated four wide column">
 					<div class="ui purple progress" v-if="numTasks > 0">
 					  	<div class="bar completion-bar" v-bind:id="progressBarId"></div>
-			   			<div class="label">{{percent}}% Completed; {{completedTimeEstimate}}/{{totalTimeEsitmate}} h</div>
+			   			<div class="label">{{percentCompleted}}% Completed {{remainingTimeEstimate > 0 ? ('~ ' + remainingTimeEstimate + 'h Remaining') : ''}}</div>
 					</div>
 					<div v-if="numTasks === 0">
 						<span class="ui small header">No Tasks</span>
@@ -93,8 +93,7 @@
 				loading: false,
 				state: this.story.name === '' ? 'create' : '',
 				editEntered: false,
-				editStory: this.story,
-				percent: 0
+				editStory: this.story
 			};
 		},
 		computed: {
@@ -116,10 +115,13 @@
 				this.story.tasks.filter((task) => totalTime += task.timeEstimate);
 				return totalTime;
 			},
-			completedTimeEstimate: function() {
-				let completedTime = 0;
-				this.story.tasks.filter((task) => completedTime += (task.completed ? task.timeEstimate : 0));
-				return completedTime;
+			remainingTimeEstimate: function() {
+				let remainingTime = 0;
+				this.story.tasks.filter((task) => remainingTime += (!task.completed ? task.timeEstimate : 0));
+				return remainingTime;
+			},
+			percentCompleted: function() {
+				return this.totalTimeEsitmate > 0 ? 100 - Math.round(this.remainingTimeEstimate / this.totalTimeEsitmate * 100) : 0;
 			},
 			progressBarId: function() {
 				return 'story-progress-bar-' + this.story.id;
@@ -229,10 +231,8 @@
 				}
 			},
 			updateProgressBar: function() {
-				this.percent = Math.round(this.completedTimeEstimate / this.totalTimeEsitmate * 100);
-
 				let progressBar = $('#' + this.progressBarId);
-				progressBar.css('width', this.percent + '%');
+				progressBar.css('width', this.percentCompleted + '%');
 			}
 		},
 		mounted: function() {

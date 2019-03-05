@@ -24,17 +24,18 @@
 					<div class="ui horizontal list">
 						<div class="item"><strong>Stories:</strong> {{project.numStories}}</div>
 						<div class="item"><strong>Tasks:</strong> {{project.numTasks}}</div>
+						<div class="item"><strong>Total Time:</strong> {{project.totalTimeEstiamte}}h</div>
 					</div>
 				</div>
-				<div v-if="project.createdDate" class="item"><strong>Created:</strong> {{createDateTimeString(project.createdDate)}}</div>
-				<div v-if="project.updatedDate" class="item"><strong>Updated:</strong> {{createDateTimeString(project.updatedDate)}}</div>
+				<div v-if="!inDemoMode" class="item"><strong>Created:</strong> {{createDateTimeString(project.createdDate)}}</div>
+				<div v-if="!inDemoMode" class="item"><strong>Updated:</strong> {{createDateTimeString(project.updatedDate)}}</div>
 			</div>
 		</div>
 		<div class="extra content">
 			<div class="ui middle aligned list">
 				<div class="item">
 					Completion: {{completionPercent}}%
-					<div class="right floated content">{{project.completedTimeEstimate}}/{{project.totalTimeEstiamte}} h</div>
+					<div class="right floated content"> Remaining: {{project.remainingTimeEstimate}}h</div>
 				</div>
 			</div>
 		</div>
@@ -45,9 +46,14 @@
 </template>
 
 <script>
+	/*global config*/
+
 	export default {
 		props: ['project'],
 		computed: {
+			inDemoMode: function() {
+				return config.demoMode;
+			},
 			progressBarId: function() {
 				return 'project-progress-bar-' + this.project.id;
 			},
@@ -55,7 +61,7 @@
 				return this.project.numStories == 0 && this.project.numTasks == 0
 			},
 			completionPercent: function() {
-				return Math.round(this.project.completedTimeEstimate / this.project.totalTimeEstiamte * 100);
+				return this.project.totalTimeEstiamte > 0 ? 100 - Math.round(this.project.remainingTimeEstimate / this.project.totalTimeEstiamte * 100) : 0;
 			}
 		},
 		methods: {

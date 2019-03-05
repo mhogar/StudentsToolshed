@@ -24,7 +24,7 @@
 				</div>
 				<div class="extra content">
 					<div class="ui placeholder">
-						<div class="short line"></div>
+						<div class="full line"></div>
 					</div>
 				</div>
 				<div class="ui bottom attached indicating progress">
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+	/*global config*/
+	
 	const Api = require('./api/projectApi');
 
 	import projectComponent from './components/project.vue'
@@ -93,7 +95,13 @@
 					function(data) {
 						data.numStories = 0;
 						data.numTasks = 0;
-						data.percent = 0;
+						data.totalTimeEstiamte = 0;
+						data.remainingTimeEstimate = 0;
+						
+						if (!config.demoMode) {
+							data.createdDate = new Date();
+							data.updatedDate = new Date();
+						}
 
 						this.projects.push(data);
 						this.projectLoading = false;

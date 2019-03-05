@@ -37,7 +37,7 @@ export function getProjectStats(successFunction, errorFunction) {
 					numStories: data.num_stories,
 					numTasks: data.num_tasks,
 					totalTimeEstiamte: data.total_time_estiamte,
-					completedTimeEstimate: data.completed_time_estimate,
+					remainingTimeEstimate: data.remaining_time_estimate,
 					createdDate: new Date(data.created_date),
 					updatedDate: new Date(data.updated_date)
 				});

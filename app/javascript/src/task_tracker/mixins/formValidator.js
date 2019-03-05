@@ -46,12 +46,12 @@ export const stringValidator = {
 export const intValidator = {
 	methods: {
 		validateInt: function(popupId, field, minValue, maxValue) {
-			if (isNaN(field)) {
+			if (isNaN(field) || (field.length > 1 && field[1] === 'x')) {
 				createPopup(popupId, 'This field must be a number.');
 				$('#' + popupId).popup('show');
 				return false;
 			}
-
+			
 			if (field < minValue) {
 				createPopup(popupId, 'Min value: ' + minValue);
 				$('#' + popupId).popup('show');
