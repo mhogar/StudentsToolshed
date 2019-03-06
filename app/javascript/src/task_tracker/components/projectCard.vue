@@ -11,8 +11,8 @@
 					  	</div>
 					</div>
 				</div>
-				<div class="right floated three wide column" v-if="isEmpty">
-					<div class="ui icon basic circular button" v-on:click.stop="discardCreate($event)">
+				<div class="right floated three wide column">
+					<div v-bind:class="'ui icon small basic circular button' + (!isEmpty ? ' disabled' : '')" v-on:click.stop="discardCreate($event)">
 						<i class="remove icon"></i>
 					</div>
 				</div>
