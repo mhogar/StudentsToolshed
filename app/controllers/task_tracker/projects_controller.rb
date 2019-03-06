@@ -18,13 +18,15 @@ class TaskTracker::ProjectsController < ApplicationController
       stories = project.stories.select(:id, :updated_at).order(updated_at: :desc)
       stats[:num_stories] = stories.length
 
-      tasks = @user.task_tracker_interface.tasks.select(:completed, :updated_at).where(story_id: stories.ids).order(updated_at: :desc)
+      tasks = @user.task_tracker_interface.tasks.select(:completed, :time_estimate, :updated_at).where(story_id: stories.ids).order(updated_at: :desc)
       stats[:num_tasks] = tasks.length
-      stats[:percent] = tasks.select { |task| task.completed == true }.count
-
-      if stats[:percent] > 0
-        stats[:percent] = (stats[:percent].to_f / stats[:num_tasks]).round(2) * 100
-      end
+      stats[:remaining_time_estimate] = 0
+	  	stats[:total_time_estiamte] = 0
+	  	
+	  	tasks.each do |task|
+	  	  stats[:total_time_estiamte] += task.time_estimate
+				stats[:remaining_time_estimate] += (!task.completed ? task.time_estimate : 0)
+	  	end
 
       lastStoryUpdate = stories.length > 0 ? stories[0].updated_at : Time.zone.parse('0001-01-01 00:00:00')
       lastTaskUpdate = tasks.length > 0 ? tasks[0].updated_at : Time.zone.parse('0001-01-01 00:00:00')

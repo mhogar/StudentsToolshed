@@ -23,7 +23,8 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
       'description' => project.description,
       'num_stories' => 2,
       'num_tasks' => 2,
-      'percent' => 50,
+      'total_time_estiamte' => 15, 
+      'remaining_time_estimate' => 5,
       'created_date' => project.created_at,
       'updated_date' => task_tracker_tasks(:one).updated_at
     }
@@ -35,7 +36,8 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
       'description' => project.description,
       'num_stories' => 0,
       'num_tasks' => 0,
-      'percent' => 0,
+      'total_time_estiamte' => 0, 
+      'remaining_time_estimate' => 0,
       'created_date' => project.created_at,
       'updated_date' => project.updated_at
     }
@@ -132,8 +134,6 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "destroy project" do
-    url = "/task_tracker/projects/#{@project.id}"
-
     assert_difference('TaskTracker::Project.count', -1) do
       assert_difference('TaskTracker::Story.count', -2) do
         assert_difference('TaskTracker::Task.count', -2) do
@@ -163,7 +163,7 @@ class TaskTracker::ProjectsControllerTest < ActionDispatch::IntegrationTest
     end
 
     def test_stats(expected, actual)
-      ['id', 'name', 'description', 'num_stories', 'num_tasks', 'percent', 'created_date', 'updated_date'].each { |field| assert_equal(expected[field], actual[field], "stats #{field} did not match") }
+      ['id', 'name', 'description', 'num_stories', 'num_tasks', 'total_time_estiamte', 'remaining_time_estimate', 'created_date', 'updated_date'].each { |field| assert_equal(expected[field], actual[field], "stats #{field} did not match") }
     end
 
     def test_no_user

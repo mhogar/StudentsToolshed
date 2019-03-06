@@ -10,18 +10,18 @@
 						<i class="tasks icon"></i> 
 						<div class="content">{{story.name}}</div>
 					</h3>
-					<EditForm v-else
-						v-bind:saveFunc="function(event) { state !== '' && update(event) }"
-						v-bind:discardFunc="function(event) {state === 'create' ? discardCreate(event) : state = ''}"
-						v-bind:model="editStory"
-						v-bind:id_name="'story-name-input-'"
-						v-bind:validations="{ required: true, minLength: config.minNameLength, maxLength: config.maxNameLength }">
-					</EditForm>
+					<form v-else class="ui form" v-on:submit.prevent>
+						<div class="ui input fluid action">
+							<input type="text" name="name" v-model="editStory.name" v-bind:id="nameInputId" />
+							<button class="ui button blue" v-on:click="onSave($event)">Save</button>
+							<button class="ui button" v-on:click="onDiscard($event)">Discard</button>
+						</div>
+					</form>
 				</div>
 				<div class="right floated four wide column">
 					<div class="ui purple progress" v-if="numTasks > 0">
 					  	<div class="bar completion-bar" v-bind:id="progressBarId"></div>
-			   			<div class="label">{{percent}}% Completed</div>
+			   			<div class="label">{{percentCompleted}}% Completed {{remainingTimeEstimate > 0 ? ('~ ' + remainingTimeEstimate + 'h Remaining') : ''}}</div>
 					</div>
 					<div v-if="numTasks === 0">
 						<span class="ui small header">No Tasks</span>
@@ -72,34 +72,56 @@
 </style>
 
 <script>
+	/*global storyConfig*/
+
 	const Api = require('../api/storyApi');
 
 	import editMenuComponent from './editMenu.vue';
-	import editFormComponent from './editForm.vue';
 	import taskComponent from './task.vue';
+
+	import {requiredValidator, stringValidator} from '../mixins/formValidator.js'
 
 	export default {
 		props: ['story'],
+		mixins: [requiredValidator, stringValidator],
 		components: {
 			'Task': taskComponent,
-			'EditMenu': editMenuComponent,
-			'EditForm': editFormComponent
+			'EditMenu': editMenuComponent
 		},
 		data: function() {
 			return {
 				loading: false,
 				state: this.story.name === '' ? 'create' : '',
-				editStory: this.story,
-				percent: 0
+				editEntered: false,
+				editStory: this.story
 			};
 		},
 		computed: {
-			config: function() {
-				return storyConfig;
+			nameInputId: function() {
+				return 'story-name-input-' + this.story.id;
+			},
+			nameValid: function() {
+				let id = this.nameInputId;
+				let field = this.editStory.name;
+
+				return this.validateRequired(id, field) && this.validateString(id, field, storyConfig.minNameLength, storyConfig.maxNameLength);
 			},
 			numTasks: function () {
 				let tasks = this.story.tasks;
 				return tasks ? tasks.length : 0;
+			},
+			totalTimeEsitmate: function() {
+				let totalTime = 0;
+				this.story.tasks.filter((task) => totalTime += task.timeEstimate);
+				return totalTime;
+			},
+			remainingTimeEstimate: function() {
+				let remainingTime = 0;
+				this.story.tasks.filter((task) => remainingTime += (!task.completed ? task.timeEstimate : 0));
+				return remainingTime;
+			},
+			percentCompleted: function() {
+				return this.totalTimeEsitmate > 0 ? 100 - Math.round(this.remainingTimeEstimate / this.totalTimeEsitmate * 100) : 0;
 			},
 			progressBarId: function() {
 				return 'story-progress-bar-' + this.story.id;
@@ -122,8 +144,32 @@
 			}
 		},
 		methods: {
+			focusInput: function(id) {
+				let el = document.getElementById(id);
+				
+				if (el) {
+					el.focus();
+					el.select();
+				}
+			},
+			onSave: function(event) {
+				if (!this.nameValid) {
+					this.focusInput(this.nameInputId);
+				}
+				else {
+					this.update(event);
+				}
+			},
+			onDiscard: function(event) {
+				if (this.state === 'create') {
+					this.$parent.deleteFromStories(this.story.id);
+				}
+
+				this.state = '';
+			},
 			edit: function(event) {
 				this.state = 'edit';
+				this.editEntered = true;
 
 				this.editStory = {
 					id: this.story.id,
@@ -148,9 +194,6 @@
 					}
 				);
 			},
-			discardCreate: function(event) {
-				this.$parent.deleteFromStories(this.story.id);
-			},
 			destroy: function(event) {
 				this.loading = true;
 				Api.deleteStory(
@@ -169,7 +212,8 @@
 					id: -1,
 					storyId: this.story.id,
 					name: '',
-					completed: false
+					completed: false,
+					timeEstimate: ''
 				};
 
 				this.addToTasks(task);
@@ -187,15 +231,21 @@
 				}
 			},
 			updateProgressBar: function() {
-				this.percent = Math.round(this.story.tasks.filter(task => task.completed === true).length / this.numTasks * 100);
-
 				let progressBar = $('#' + this.progressBarId);
-				progressBar.css('width', this.percent + '%');
+				progressBar.css('width', this.percentCompleted + '%');
 			}
 		},
 		mounted: function() {
 			this.updateProgressBar();
 			$('.ui.accordion.task-list').accordion();
-		}
+			
+			this.focusInput(this.nameInputId);
+		},
+		updated: function() {
+			if (this.editEntered) {
+      	this.focusInput(this.nameInputId);
+      	this.editEntered = false;
+			}
+    }
 	};
 </script>

@@ -5,29 +5,54 @@
 		</div>
 		<div class="ui three cards" v-if="selectedProject === null">
 			<ProjectCard class="ui cards" v-for="project in projects" :key="project.id" v-bind:project="project"></ProjectCard>
-			<ProjectCardPlaceholder v-if="projectLoading" />
+			<div v-if="projectLoading" class="ui raised card">
+				<div class="content">
+					<div class="ui placeholder">
+						<div class="image header">
+						  	<div class="short line"></div>
+							<div class="long line"></div>
+						</div>
+					</div>
+				</div>
+				<div class="content">
+					<div class="ui placeholder">
+						<div class="paragraph">
+						    <div class="line"></div>
+						    <div class="line"></div>
+						</div>
+					</div>
+				</div>
+				<div class="extra content">
+					<div class="ui placeholder">
+						<div class="full line"></div>
+					</div>
+				</div>
+				<div class="ui bottom attached indicating progress">
+				    <div class="bar"></div>
+			  	</div>
+			</div>
 			<div class="ui link raised card" v-on:click="createProject($event)">
 				<div class="content">
 					<i class ="icon plus circle"></i> Add a new project
 				</div>
 			</div>
 		</div>
-		<Project v-bind:projectId="selectedProject.id" v-else></Project>
+		<Project v-else v-bind:projectId="selectedProject.id"></Project>
 	</div>
 </template>
 
 <script>
+	/*global config*/
+	
 	const Api = require('./api/projectApi');
 
 	import projectComponent from './components/project.vue'
 	import projectCardComponent from './components/projectCard.vue'
-	import projectCardPlaceholderComponent from './components/projectCardPlaceholder.vue'
 
 	export default {
 		components: {
 			'Project': projectComponent,
-			'ProjectCard': projectCardComponent,
-			'ProjectCardPlaceholder': projectCardPlaceholderComponent
+			'ProjectCard': projectCardComponent
 		},
 		data: function() {
 			return {
@@ -70,7 +95,13 @@
 					function(data) {
 						data.numStories = 0;
 						data.numTasks = 0;
-						data.percent = 0;
+						data.totalTimeEstiamte = 0;
+						data.remainingTimeEstimate = 0;
+						
+						if (!config.demoMode) {
+							data.createdDate = new Date();
+							data.updatedDate = new Date();
+						}
 
 						this.projects.push(data);
 						this.projectLoading = false;

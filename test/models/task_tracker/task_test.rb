@@ -38,4 +38,29 @@ class TaskTracker::TaskTest < ActiveSupport::TestCase
 		@task.name = "a" * (TaskTracker::Task::NAME_MAX_LENGTH + 1)
 		assert_not @task.valid?
 	end
+	
+	test "task without time_estimate is invalid" do
+		@task.time_estimate = nil
+		assert_not @task.valid?
+	end
+	
+	test "task with time_estimate too small is invalid" do
+		#min time_estimate is valid
+		@task.time_estimate = TaskTracker::Task::TIME_ESTIMATE_MIN_VALUE
+		assert @task.valid?
+
+		#one less than min is not valid
+		@task.time_estimate = TaskTracker::Task::TIME_ESTIMATE_MIN_VALUE - 1
+		assert_not @task.valid?
+	end
+	
+	test "task with time_estimate too large is invalid" do
+		#max time_estimate is valid
+		@task.time_estimate = TaskTracker::Task::TIME_ESTIMATE_MAX_VALUE
+		assert @task.valid?
+
+		#one more than max is not valid
+		@task.time_estimate = TaskTracker::Task::TIME_ESTIMATE_MAX_VALUE + 1
+		assert_not @task.valid?
+	end
 end

@@ -17,7 +17,9 @@
 
 	const taskConfig = {
 		minNameLength: <%= TaskTracker::Task::NAME_MIN_LENGTH %>,
-		maxNameLength: <%= TaskTracker::Task::NAME_MAX_LENGTH %>
+		maxNameLength: <%= TaskTracker::Task::NAME_MAX_LENGTH %>,
+		minTimeEstimateValue: <%= TaskTracker::Task::TIME_ESTIMATE_MIN_VALUE %>,
+		maxTimeEstimateValue: <%= TaskTracker::Task::TIME_ESTIMATE_MAX_VALUE %>
 	};
 </script>
 

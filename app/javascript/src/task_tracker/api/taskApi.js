@@ -1,3 +1,5 @@
+/*global config*/
+
 import axios from 'axios';
 
 const DemoApi = require('./taskApiDemo');
@@ -7,7 +9,8 @@ export function convertTaskData(data) {
 		id: data.id,
 		storyId: data.story_id,
 		name: data.name,
-		completed: data.completed
+		completed: data.completed,
+		timeEstimate: data.time_estimate
 	};
 }
 
@@ -21,7 +24,8 @@ export function createOrUpdateTask(task, successFunction, errorFunction) {
 	let localTask = {
 		story_id: task.storyId,
 		name: task.name,
-		completed: task.completed
+		completed: task.completed,
+		time_estimate: task.timeEstimate
 	};
 	
 	//create

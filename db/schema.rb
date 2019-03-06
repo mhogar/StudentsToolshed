@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_17_181835) do
+ActiveRecord::Schema.define(version: 2019_03_04_163703) do
 
   create_table "task_tracker_interfaces", force: :cascade do |t|
     t.integer "user_id"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 2019_02_17_181835) do
     t.boolean "completed", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "time_estimate", limit: 1, default: 1, null: false
     t.index ["story_id"], name: "index_task_tracker_tasks_on_story_id"
   end
 

@@ -1,3 +1,5 @@
+/*global config*/
+
 import axios from 'axios';
 import { convertStoryData } from './storyApi';
 
@@ -34,7 +36,8 @@ export function getProjectStats(successFunction, errorFunction) {
 					description: data.description,
 					numStories: data.num_stories,
 					numTasks: data.num_tasks,
-					percent: data.percent,
+					totalTimeEstiamte: data.total_time_estiamte,
+					remainingTimeEstimate: data.remaining_time_estimate,
 					createdDate: new Date(data.created_date),
 					updatedDate: new Date(data.updated_date)
 				});

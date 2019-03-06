@@ -47,7 +47,7 @@ class TaskTracker::TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:story_id, :name, :completed)
+      params.require(:task).permit(:story_id, :name, :completed, :time_estimate)
     end
 
     def set_user

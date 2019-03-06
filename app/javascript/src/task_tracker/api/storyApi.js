@@ -1,3 +1,5 @@
+/*global config*/
+
 import axios from 'axios';
 import { convertTaskData } from './taskApi';
 

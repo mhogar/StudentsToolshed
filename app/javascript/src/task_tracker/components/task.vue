@@ -4,33 +4,45 @@
 			<div v-if="loading" class="ui active inverted dimmer">
 				<div class="ui loader"></div>
 			</div>
-			<div class="ui grid">
+			<div class="ui grid" v-if="state === ''">
 				<div class="left floated twelve wide column">
 					<div v-if="state === ''">
 						<i class="thumbtack icon"></i> {{task.name}}
 					</div>
-					<EditForm v-else
-						v-bind:saveFunc="function(event) { state !== '' && update(event) }"
-						v-bind:discardFunc="function(event) {state === 'create' ? discardCreate(event) : state = ''}"
-						v-bind:model="editTask"
-						v-bind:id_name="'task-name-input-'"
-						v-bind:validations="{ required: true, minLength: config.minNameLength, maxLength: config.maxNameLength }">
-					</EditForm>
 				</div>
-				<div class="left floated two wide column">
+				<div class="right floated one wide column">
+					<strong>{{task.timeEstimate}}h</strong>
+				</div>
+				<div class="right floated two wide column">
 					<div class="ui checkbox right floated">
 						<input type="checkbox" v-on:click.prevent="toggleDone($event)" v-bind:checked="task.completed">
 						<label>Completed</label>
 					</div>
 				</div>
 				<div class="left floated one wide column">
-					<EditMenu  v-if="state !== 'create'"
+					<EditMenu
 						v-bind:editFunc="edit" 
 						v-bind:deleteFunc="destroy" 
 						v-bind:options="{ menuPointDir: 'top left' }">
 					</EditMenu>
 				</div>
 			</div>
+			<form v-else class="ui form" v-on:submit.prevent>
+				<div class="fields">
+					<div class="twelve wide field">
+						<input type="text" name="name" v-model="editTask.name" v-bind:id="nameInputId" ss/>
+					</div>
+					<div class="one wide field">
+						<input type="text" name="timeEstimate" v-model="editTask.timeEstimate" v-bind:id="timeEstimateInputId" />
+					</div>
+					<div class="field">
+						<div class="ui buttons">
+							<button class="ui button blue" name="save" v-on:click="onSave($event)">Save</button>
+							<button class="ui button" name="discard" v-on:click="onDiscard($event)">Discard</button>
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </template>
@@ -46,30 +58,78 @@
 </style>
 
 <script>
+	/*global taskConfig*/
+
 	const Api = require('../api/taskApi');
 
 	import editMenuComponent from './editMenu.vue';
-	import editFormComponent from './editForm.vue';
+	import {requiredValidator, stringValidator, intValidator} from '../mixins/formValidator.js'
 
 	export default {
 		props: ['task'],
+		mixins: [requiredValidator, stringValidator, intValidator],
 		components: {
-			'EditMenu': editMenuComponent,
-			'EditForm': editFormComponent
+			'EditMenu': editMenuComponent
 		},
 		data: function() {
 			return {
 				loading: false,
 				state: this.task.name === '' ? 'create' : '',
-				editTask: this.task
+				editEntered: false,
+				editTask: {
+					id: this.task.id,
+					name: this.task.name,
+					timeEstimate: this.task.timeEstimate
+				}
 			};
 		},
 		computed: {
-			config: function() {
-				return taskConfig;
+			nameInputId: function() {
+				return 'task-name-input-' + this.task.id;
+			},
+			timeEstimateInputId: function() {
+				return 'task-time-estimate-input-' + this.task.id;
+			},
+			nameValid: function() {
+				let id = this.nameInputId;
+				let field = this.editTask.name;
+
+				return this.validateRequired(id, field) && this.validateString(id, field, taskConfig.minNameLength, taskConfig.maxNameLength);
+			},
+			timeEstimateValid: function() {
+				let id = this.timeEstimateInputId;
+				let field = this.editTask.timeEstimate;
+
+				return this.validateRequired(id, field) && this.validateInt(id, field, taskConfig.minTimeEstimateValue, taskConfig.maxTimeEstimateValue);
 			}
 		},
 		methods: {
+			focusInput: function(id) {
+				let el = document.getElementById(id);
+				
+				if (el) {
+					el.focus();
+					el.select();
+				}
+			},
+			onSave: function(event) {
+				if (!this.nameValid) {
+					this.focusInput(this.nameInputId);
+				}
+				else if (!this.timeEstimateValid) {
+					this.focusInput(this.timeEstimateInputId);
+				}
+				else {
+					this.update(event);
+				}
+			},
+			onDiscard: function(event) {
+				if (this.state === 'create') {
+					this.$parent.deleteFromTasks(this.task.id);
+				}
+
+				this.state = '';
+			},
 			toggleDone: function (event) {
 				this.task.completed = !this.task.completed;
 				this.$parent.updateProgressBar();
@@ -93,16 +153,20 @@
 				}
 
 				this.state = 'edit';
+				this.editEntered = true;
 
 				this.editTask = {
 					id: this.task.id,
-					name: this.task.name
+					name: this.task.name,
+					timeEstimate: this.task.timeEstimate
 				};
 			},
 			update: function(event) {
 				this.state = '';
 
 				this.task.name = this.editTask.name;
+				this.task.timeEstimate = parseInt(this.editTask.timeEstimate, 10);
+				this.$parent.updateProgressBar();
 
 				this.loading = true;
 				Api.createOrUpdateTask(
@@ -117,9 +181,6 @@
 					}
 				);
 			},
-			discardCreate: function(event) {
-				this.$parent.deleteFromTasks(this.task.id);
-			},
 			destroy: function(event) {
 				this.loading = true;
 				Api.deleteTask(
@@ -133,6 +194,15 @@
 					}
 				);
 			}
-		}
+		},
+		updated: function() {
+			if (this.editEntered) {
+      	this.focusInput(this.nameInputId);
+      	this.editEntered = false;
+			}
+    },
+    mounted: function() {
+    	this.focusInput(this.nameInputId);
+    }
 	};
 </script>

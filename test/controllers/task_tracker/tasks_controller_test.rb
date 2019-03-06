@@ -5,7 +5,7 @@ class TaskTracker::TasksControllerTest < ActionDispatch::IntegrationTest
 
 	setup do
     @task = task_tracker_tasks(:one)
-    @new_task = TaskTracker::Task.new(story_id: 1, name: "A new task", completed: true)
+    @new_task = TaskTracker::Task.new(story_id: 1, name: "A new task", completed: true, time_estimate: 4)
 
     sign_in users(:alice)
   end
@@ -101,7 +101,7 @@ class TaskTracker::TasksControllerTest < ActionDispatch::IntegrationTest
 
   private
   	def test_model_fields(src_model, test_model)
-  		['story_id', 'name', 'completed'].each { |field| assert_equal(src_model[field], test_model[field]) }
+  		['story_id', 'name', 'completed', 'time_estimate'].each { |field| assert_equal(src_model[field], test_model[field]) }
   	end
 
     def test_no_user
