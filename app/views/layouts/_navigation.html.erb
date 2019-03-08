@@ -12,6 +12,9 @@
       </div>
     </h3>
   </div>
+  <div class="item">
+    <%= link_to "About", about_path %>
+  </div>
   <div class="item right">
     <% if not user_signed_in? %>
       <%= link_to "Login", new_user_session_path, class: 'ui basic inverted button right-menu-item' %>
