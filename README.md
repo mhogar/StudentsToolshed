@@ -33,4 +33,5 @@ As of the current release there is only one app, however more are planned. Look 
 * Each API endpoint has associated integration tests. Run them with `rails test test/controllers/*`
 
 # Release Notes
+* [Fractal](release_notes/fractal.md)
 * [Task Tracker](release_notes/task_tracker.md)
