@@ -1,11 +1,13 @@
 import { getStoriesByProjectId } from './storyApiDemo';
 
 var projectData = [
+/* For testing
 	{
 		id: 1,
 		name: 'Project Name',
 		description: ''
 	}
+*/
 ];
 
 function nextId() {

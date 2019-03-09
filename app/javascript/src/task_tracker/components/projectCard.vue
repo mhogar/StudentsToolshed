@@ -1,7 +1,13 @@
 <template>
-	<div class="ui link raised card" v-on:click="$parent.selectProject(project)">
+	<div v-else v-bind:class="'ui raised card' + (!project.loading ? ' link' : '')" v-on:click="!project.loading ? $parent.selectProject(project) : ''">
 		<div class="content">
-			<div class="ui grid">
+			<div v-if="project.loading" class="ui placeholder">
+				<div class="image header">
+				  	<div class="short line"></div>
+					<div class="long line"></div>
+				</div>
+			</div>
+			<div v-else class="ui grid">
 				<div class="twelve wide column">
 					<div class="ui header">
 					  	<i v-bind:class="'icon ' + (completionPercent === 100 ? 'check circle green' : 'yellow thumbtack')"></i>
@@ -19,7 +25,13 @@
 			</div>
 		</div>
 		<div class="content">
-			<div class="ui list">
+			<div v-if="project.loading" class="ui placeholder">
+				<div class="paragraph">
+				    <div class="line"></div>
+				    <div class="line"></div>
+				</div>
+			</div>
+			<div v-else class="ui list">
 				<div class="item">
 					<div class="ui horizontal list">
 						<div class="item"><strong>Stories:</strong> {{project.numStories}}</div>
@@ -32,14 +44,17 @@
 			</div>
 		</div>
 		<div class="extra content">
-			<div class="ui middle aligned list">
+			<div v-if="project.loading" class="ui placeholder">
+				<div class="full line"></div>
+			</div>
+			<div v-else class="ui middle aligned list">
 				<div class="item">
 					Completion: {{completionPercent}}%
 					<div class="right floated content"> Remaining: {{project.remainingTimeEstimate}}h</div>
 				</div>
 			</div>
 		</div>
-		<div class="ui bottom attached indicating progress" v-bind:id="progressBarId">
+		<div class="ui bottom attached indicating progress" v-bind:id="project.loading ? 'loading-project-progress-bar' : progressBarId">
 		    <div class="bar"></div>
 	  	</div>
 	</div>
