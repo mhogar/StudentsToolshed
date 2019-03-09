@@ -1,7 +1,7 @@
-# About Fractal
+# About Students Toolshed
 
 ### Overview
-ST is a ruby on rails web application that is composed of smaller javascript applications. The outer container part is refered to as Fractal (because of its app made of apps ception), providing authentication, navigation, an API, database, etc. for each of its javascript apps. 
+ST is a ruby on rails web application that is composed of smaller javascript applications. The outer container part is refered to as Fractal (because of its app made of apps ception), providing authentication, navigation, an API, database, etc. for each of its javascript apps. The apps themseleves are small, useful tools targeted for use by university students.
 
 ### Inspiration
 Have you ever had a great idea for a small but useful app on the bus ride home? Were you demotivated by all the background work that needs to be done to make your app even run? Well no more, as ST’s infrastructure was designed in such a way that adding new apps is quick and easy. All the “hard” stuff is already provided by the ST, so you can get straight to creating your app without having to setup any of that background stuff.
