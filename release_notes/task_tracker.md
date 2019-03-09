@@ -17,3 +17,4 @@
 * Increased project name character limit
 * To fix project card UI issues, the X button on project cards is now always visible but will be disabled if the project has any stories or tasks
 * Created and updated dates are now populated on initial project creation
+* When deleting a project through the project card, the project card placeholder will now appear in the same location as the deleted card
