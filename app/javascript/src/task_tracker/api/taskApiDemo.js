@@ -1,4 +1,5 @@
 var taskData = [
+/* For testing
 	{
 		id: 1,
 		name: 'Task Name',
@@ -6,6 +7,7 @@ var taskData = [
 		timeEstimate: 2,
 		storyId: 1
 	}
+*/
 ];
 
 function nextId() {

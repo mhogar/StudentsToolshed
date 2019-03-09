@@ -1,11 +1,13 @@
 import { getTasksByStoryId } from './taskApiDemo';
 
 var storyData = [
+/* For testing
 	{
 		id: 1,
 		name: 'Story Name',
 		projectId: 1
 	}
+*/
 ];
 
 function nextId() {
