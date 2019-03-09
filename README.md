@@ -1,10 +1,10 @@
 # About Fractal
 
 ### Overview
-Fractal is a ruby on rails web application that is composed of smaller javascript applications. The rails app acts as a container, providing authentication, navigation, an API, database, etc. for each of its javascript apps. 
+ST is a ruby on rails web application that is composed of smaller javascript applications. The outer container part is refered to as Fractal (because of its app made of apps ception), providing authentication, navigation, an API, database, etc. for each of its javascript apps. 
 
 ### Inspiration
-Have you ever had a great idea for a small but useful app on the bus ride home? Were you demotivated by all the background work that needs to be done to make your app even run? Well no more, as Fractal’s infrastructure was designed in such a way that adding new apps is quick and easy. All the “hard” stuff is already provided by the Fractal, so you can get straight to creating your app without having to setup any of that background stuff.
+Have you ever had a great idea for a small but useful app on the bus ride home? Were you demotivated by all the background work that needs to be done to make your app even run? Well no more, as ST’s infrastructure was designed in such a way that adding new apps is quick and easy. All the “hard” stuff is already provided by the ST, so you can get straight to creating your app without having to setup any of that background stuff.
 
 ### Available apps
 As of the current release there is only one app, however more are planned. Look forward to Course Scheduler, Grade Calculator, and Credit Tracker!
@@ -33,5 +33,5 @@ As of the current release there is only one app, however more are planned. Look 
 * Each API endpoint has associated integration tests. Run them with `rails test test/controllers/*`
 
 # Release Notes
-* [Fractal](release_notes/fractal.md)
-* [Task Tracker](release_notes/task_tracker.md)
+* [Fractal](https://github.com/mhogar/StudentsToolshed/wiki/Fractal-Release-Notes)
+* [Task Tracker](https://github.com/mhogar/StudentsToolshed/wiki/Task-Tracker-Release-Notes)
