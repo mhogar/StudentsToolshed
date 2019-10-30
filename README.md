@@ -1,4 +1,6 @@
-# About Students Toolshed
+# Students Toolshed
+
+## About 
 
 ### Overview
 ST is a ruby on rails web application that is composed of smaller javascript applications. The outer container part is refered to as Fractal (because of its app made of apps ception), providing authentication, navigation, an API, database, etc. for each of its javascript apps. The apps themseleves are small, useful tools targeted for use by university students.
@@ -9,29 +11,24 @@ Have you ever had a great idea for a small but useful app on the bus ride home? 
 ### Available apps
 As of the current release there is only one app, however more are planned. Look forward to Course Scheduler, Grade Calculator, and Credit Tracker!
 
-* __Task Tracker__: Create projects, stories, and tasks to help organize and guide your thoughts in this easy to use task management app.
+- __Task Tracker__: Create projects, stories, and tasks to help organize and guide your thoughts in this easy to use task management app.
 
-# Running the app
+## Running the App
 
-### System Dependencies
-* rails 5.2.2
-* ruby 2.6.1
-* bundler 2.0.1
-* node.js >= 8
-* yarn
-
-### Setting up the app locally
-1. run `yarn install` to install front-end packages used by the javascript apps
-1. run `bundle install –-without production`
-1. run `rails db:migrate`
+### Building and setup
+1. ST is run using docker compose. Install it [here](https://docs.docker.com/compose/install/)
+1. Fork/download the repo and open a terminal in the root directory of the app. Run `docker-compose build`
+1. Run `docker-compose run app rails db:migrate` to finish database setup
 
 ### Running the server
-* run `rails server`
+- Start the container and run the server with `docker-compose up`. Navigate to http://localhost:3000
 
 ### Running the tests
-* Each model has associated validation tests. Run them with `rails test test/models/*`
-* Each API endpoint has associated integration tests. Run them with `rails test test/controllers/*`
+- Run the rails tests with `docker-compose run app rails test`
+- To run specific tests, add the following to the end of the command:
+    - Model validation tests: `test/models/*`
+    - API endpoint controller tests: `test/controllers/*`
 
-# Release Notes
-* [Fractal](https://github.com/mhogar/StudentsToolshed/wiki/Fractal-Release-Notes)
-* [Task Tracker](https://github.com/mhogar/StudentsToolshed/wiki/Task-Tracker-Release-Notes)
+## Release Notes
+- [Fractal](https://github.com/mhogar/StudentsToolshed/wiki/Fractal-Release-Notes)
+- [Task Tracker](https://github.com/mhogar/StudentsToolshed/wiki/Task-Tracker-Release-Notes)
