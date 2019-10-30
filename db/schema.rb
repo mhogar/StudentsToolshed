@@ -12,15 +12,18 @@
 
 ActiveRecord::Schema.define(version: 2019_03_04_163703) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "task_tracker_interfaces", force: :cascade do |t|
-    t.integer "user_id"
+    t.bigint "user_id"
     t.index ["user_id"], name: "index_task_tracker_interfaces_on_user_id"
   end
 
   create_table "task_tracker_object_maps", force: :cascade do |t|
-    t.integer "task_tracker_interface_id"
+    t.bigint "task_tracker_interface_id"
     t.string "object_type"
-    t.integer "object_id"
+    t.bigint "object_id"
     t.index ["object_type", "object_id"], name: "index_task_tracker_object_map_on_obj_type_and_obj_id"
     t.index ["task_tracker_interface_id"], name: "index_task_tracker_object_maps_on_task_tracker_interface_id"
   end
@@ -33,7 +36,7 @@ ActiveRecord::Schema.define(version: 2019_03_04_163703) do
   end
 
   create_table "task_tracker_stories", force: :cascade do |t|
-    t.integer "project_id"
+    t.bigint "project_id"
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -41,12 +44,12 @@ ActiveRecord::Schema.define(version: 2019_03_04_163703) do
   end
 
   create_table "task_tracker_tasks", force: :cascade do |t|
-    t.integer "story_id"
+    t.bigint "story_id"
     t.string "name"
     t.boolean "completed", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "time_estimate", limit: 1, default: 1, null: false
+    t.integer "time_estimate", limit: 2, default: 1, null: false
     t.index ["story_id"], name: "index_task_tracker_tasks_on_story_id"
   end
 
@@ -62,4 +65,6 @@ ActiveRecord::Schema.define(version: 2019_03_04_163703) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "task_tracker_stories", "task_tracker_projects", column: "project_id"
+  add_foreign_key "task_tracker_tasks", "task_tracker_stories", column: "story_id"
 end
