@@ -1,0 +1,15 @@
+name: CI
+on: [push]
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build Image
+        run: docker-compose build
+      - name: Setup Database
+        run: |
+          docker-compose run app rails db:create
+          docker-compose run app rails db:migrate
+      - name: Run Tests
+        run: docker-compose run app rails test

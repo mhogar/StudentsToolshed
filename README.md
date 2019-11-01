@@ -18,6 +18,7 @@ As of the current release there is only one app, however more are planned. Look 
 ### Building and setup
 1. ST is run using docker compose. Install it [here](https://docs.docker.com/compose/install/)
 1. Fork/download the repo and open a terminal in the root directory of the app. Run `docker-compose build`
+1. Run `docker-compose run app rails db:create` to create the database
 1. Run `docker-compose run app rails db:migrate` to finish database setup
 
 ### Running the server
