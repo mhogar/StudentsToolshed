@@ -1,12 +1,11 @@
 services:
   - docker
-
-before_install:
-  - docker-compose build
-  - docker-compose run app rails db:create
-  - docker-compose run app rails db:migrate
-
+  
 jobs:
   include:
     - stage: Tests
+      install: 
+        - docker-compose build
+        - docker-compose run app rails db:create
+        - docker-compose run app rails db:migrate
       script: docker-compose run app rails test
