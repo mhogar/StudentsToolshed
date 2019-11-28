@@ -1,4 +1,4 @@
-# Students Toolshed
+# Students Toolshed ![build status](https://travis-ci.com/mhogar/StudentsToolshed.svg?branch=master)
 
 ## About 
 
