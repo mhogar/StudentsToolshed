@@ -16,6 +16,8 @@ jobs:
         - yarn install
         - bundle install --without production
       before_script:
-        - cp config/database.travis.yml config/database.yml # setup the travis-ci specific db config
+        - cp config/database.travis.yml config/database.yml # update the db config to the travis-ci specific db config
+        - psql -c 'create database travis_ci_test;' -U postgres # create the db
+      script:
         - bundle exec rails db:migrate
-      script: bundle exec rails test
+        - bundle exec rails test
