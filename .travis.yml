@@ -12,6 +12,5 @@ before_install: &common_build
 jobs:
   include:
     - stage: Tests
-      <<: *common_build
       install: skip
       script: bundle exec rails test
