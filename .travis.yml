@@ -1,5 +1,9 @@
 language: ruby
 os: linux
+
+services:
+  - postgresql
+
 cache:
   bundler: true
   directories:
@@ -11,4 +15,7 @@ jobs:
       install:
         - yarn install
         - bundle install --without production
+      before_script:
+        - cp config/database.travis.yml config/database.yml # setup the travis-ci specific db config
+        - bundle exec rails db:migrate
       script: bundle exec rails test

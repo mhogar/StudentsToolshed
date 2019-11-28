@@ -1,0 +1,5 @@
+# Database config for travis CI pipeline
+
+test:
+  adapter: postgresql
+  database: travis_ci_test
