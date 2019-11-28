@@ -1,0 +1,33 @@
+language: ruby
+os: linux
+
+services:
+  - postgresql
+
+cache:
+  bundler: true
+  directories:
+    - node_modules  
+
+jobs:
+  include:
+    - stage: Unit Tests
+      install:
+        - yarn install
+        - bundle install --without production
+      before_script:
+        - cp config/database.travis.yml config/database.yml # update the db config to the travis-ci specific db config
+        - psql -c 'create database travis_ci_test;' -U postgres # create the db
+      script:
+        - bundle exec rails db:migrate
+        - bundle exec rails test
+    - stage: Deployment
+      install: skip
+      script: skip
+      deploy:
+        on:
+          branch: master # only deploy from master
+        provider: heroku
+        app: students-toolshed-staging
+        api_key:
+          secure: a+aDm0wCI7gqkfe8ZFBg/xZe4Q0nkeSvkV4sdg3aCE4cH1/pzeABNznSD3jy/+2kRvFbqk+dxX8JiLVk9xz5LTVY+FEVTEg3hQE6Tt5LWkTQfZZ1gRq0eA/iSn7Pk8JzlqXxspX13EwRBs5kcY3HrAFujQkXIdSXyHb7QTLC4CpQK6tYoR3R4/6kvp6d4bBkcIr7LoDoxrnyapEwUTBeI1ynjW5gQE4RnYP62meQYBADyuu4v3saqR2Gna9KCEgEVn3jqs3B/mV5t9By7iwSMKdzUY9Eh3l2y/JtgXzCbsoplx5B63HgEEmuPV3d2AUs6DitGo7qwZAvZKOkMok6tzfDkDJoWfdOZEdsD+mX42MQI+j4HPtVfkvOZdA08LxFJEe2cLx/AEd6ab5cYXxO/Eg9EAKDh0aDosUTBvY3PLhuW5APGE9S0CRhECQ89jqr+F0VOaD9h+9twOqrvU/5hPLYG1IT2LJ5Ox3zSkxUPsW/NzhV5ztpWpu77HTsipJs1CA1tUhAbrrWTpF0jlLPLTi8L4z2N3eNtKofvsWvhsweRCG83mbPpeM9eTPvZLWv6x429bu10GZXU/rkGvL09WodA+A16R6ZwuGBmJoTh092aNyrtDHu1VP96SUiSX5QWvb/GHlLCbKR8lBCdXDzuBVj+AMTPltmKW4GQTq/g8g=
