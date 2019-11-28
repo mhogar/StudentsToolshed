@@ -26,8 +26,7 @@ jobs:
       script: skip
       deploy:
         on:
-          all_branches: true
-          #branch: master # only deploy from master
+          branch: master # only deploy from master
         provider: heroku
         app: students-toolshed-staging
         api_key:
