@@ -3,14 +3,12 @@ os: linux
 cache:
   bundler: true
   directories:
-  - node_modules
-
-before_install: &common_build
-  - yarn install
-  - bundle install --without production
+    - node_modules  
 
 jobs:
   include:
     - stage: Tests
-      install: skip
+      install:
+        - yarn install
+        - bundle install --without production
       script: bundle exec rails test
