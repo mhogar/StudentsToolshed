@@ -22,12 +22,12 @@ jobs:
         - bundle exec rails db:migrate
         - bundle exec rails test
     - stage: Deployment
-      on:
-        all_branches: true
-        #branch: master # only deploy from master
       install: skip
       script: skip
       deploy:
+        on:
+          all_branches: true
+          #branch: master # only deploy from master
         provider: heroku
         app: students-toolshed-staging
         api_key:
