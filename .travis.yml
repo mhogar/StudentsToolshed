@@ -1,0 +1,16 @@
+language: ruby
+cache:
+  bundler: true
+  directories:
+  - node_modules
+
+before_install: &common_build
+  - yarn install
+  - bundle install --without production
+
+jobs:
+  include:
+    - stage: Tests
+      *<< common_build
+      install: skip
+      script: bundle exec rails test
