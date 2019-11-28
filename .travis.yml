@@ -22,7 +22,9 @@ jobs:
         - bundle exec rails db:migrate
         - bundle exec rails test
     - stage: Deployment
-      #if: branch = master #only deploy from master
+      on:
+        all_branches: true
+        #branch: master # only deploy from master
       install: skip
       script: skip
       deploy:
